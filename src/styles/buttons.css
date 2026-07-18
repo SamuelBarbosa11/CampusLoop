@@ -1,0 +1,26 @@
+.button {
+	cursor: pointer;
+
+	display: flex;
+	align-items: center;
+	text-align: center;
+
+	background-color: var(--button-bg);
+	color: black;
+	font-weight: 700;
+}
+
+.button-opaque {
+	cursor: pointer;
+
+	display: flex;
+	align-items: center;
+	text-align: center;
+
+	font-weight: 600;
+
+	background-color: transparent;
+	color: var(--light);
+
+	border: 1px solid var(--traced);
+}

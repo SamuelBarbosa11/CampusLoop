@@ -1,0 +1,5 @@
+@import "tailwindcss";
+
+@import "./global.css";
+@import "./buttons.css";
+@import "./effects.css";
