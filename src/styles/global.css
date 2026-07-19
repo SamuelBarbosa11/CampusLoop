@@ -19,10 +19,6 @@ body {
 	/* border: 1px solid red; */
 }
 
-*:focus {
-	outline: 2px solid var(--mauve-10);
-}
-
 .no-focus-outline {
 	&:focus {
 		outline: none;
@@ -30,29 +26,31 @@ body {
 }
 
 :root {
-	--background: #131319;
+	--background: var(--woodsmoke);
 	--navbar: #0a0a0eb3;
 
 	--primary: #fbfbfd;
-	--secondary: #9e9e9e;
+	--secondary: var(--manatae);
 	--tertiary: #161616;
 
 	--athens-grey: #f1f1f5e6;
 
 	--mauve: #c29fff;
 	--mauve-10: #c29fff1a;
-	--mauve-40: rgba(194, 159, 255, 0.4);
+	--mauve-40: #c29fff66;
 
 	--woodsmoke: #131319;
+	--woodsmoke-secondary: #111118;
+	--woodsmoke-tertiary: #0b0b0f;
+
 	--shark: #28282f;
-	--manatee: #8e8e98;
-	--dark-purple: #8945ff7a;
+	--manatae: #8e8e98;
 
 	--light: #f1f1f5;
 	--traced: #28282f;
+	--dark-purple: #8945ff7a;
 
-	--button-bg: var(--mauve);
-	--button-color: #0b0b0f;
+	--bg-button: var(--mauve);
 
 	--font-inter: "Inter", sans-serif;
 	--font-geist: "Geist", sans-serif;
@@ -69,7 +67,7 @@ body {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-	background: var(--button-bg);
+	background: var(--bg-button);
 }
 
 ::-webkit-scrollbar-track {

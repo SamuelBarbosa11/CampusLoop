@@ -2,11 +2,11 @@ import type { CSSProperties } from "react";
 import type { IconType } from "react-icons";
 import clsx from "clsx";
 
-import Text from "./Text";
+import Text from "../Text";
 
 import { useNavigate } from "react-router";
 
-type NavLinkIconProps =
+type BottomNavLinkIconProps =
 	| {
 			icon: IconType;
 			image?: never;
@@ -16,7 +16,7 @@ type NavLinkIconProps =
 			image: string;
 	  };
 
-type NavLinkProps = NavLinkIconProps & {
+type BottomNavLinkProps = BottomNavLinkIconProps & {
 	label?: string;
 	tag?: string;
 
@@ -26,7 +26,7 @@ type NavLinkProps = NavLinkIconProps & {
 	className?: string;
 };
 
-export default function NavLink(props: NavLinkProps) {
+export default function BottomNavLink(props: BottomNavLinkProps) {
 	const navigate = useNavigate();
 
 	const {
@@ -68,7 +68,7 @@ export default function NavLink(props: NavLinkProps) {
 			variant="button"
 			className={clsx(
 				[
-					"text-(--manatee) flex flex-col justify-center items-center gap-2 uppercase font-bold font-(family-name:--font-geist) no-focus-outline",
+					"text-(--secondary) flex flex-col justify-center items-center gap-2 uppercase font-bold font-(family-name:--font-geist) no-focus-outline",
 				],
 				className
 			)}

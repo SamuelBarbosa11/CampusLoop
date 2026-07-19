@@ -1,15 +1,15 @@
 import { useNavigate } from "react-router";
+import { useAuth } from "../../auth";
 
-import Text from "./Text";
-import Logo from "./Logo";
-import Hello from "./Hello";
+import Text from "../Text";
+import Logo from "../Logo";
+import Hello from "../Hello";
 
-import { scrollToSection } from "../utils/scrollToSection";
+import { scrollToSection } from "../../utils/scrollToSection";
 
 export default function Navbar() {
 	const navigate = useNavigate();
-
-	const isLoged = true;
+	const { isAuthenticated } = useAuth();
 
 	return (
 		<nav className="fixed top-0 z-10 flex justify-between items-center w-full py-4 px-6 bg-(--navbar) backdrop-blur-md">
@@ -49,12 +49,12 @@ export default function Navbar() {
 			</ul>
 
 			<div className="flex gap-3">
-				{isLoged ? (
+				{isAuthenticated ? (
 					<Hello />
 				) : (
 					<button
 						id="sign-in"
-						onClick={() => navigate("/login")}
+						onClick={() => navigate("/auth")}
 						className="cursor-pointer text-(--secondary) hover:text-(--primary) transition duration-300 ease-in-out"
 					>
 						Entrar

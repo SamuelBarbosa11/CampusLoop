@@ -1,13 +1,13 @@
 import { useState } from "react";
 
-import { useIsDesktop } from "../../utils/useIsDesktop";
+import { useIsDesktop } from "../../../utils/useIsDesktop";
 
-import Text from "../../components/Text";
-import SearchBar from "../../components/SearchBar";
-import Filter from "../../components/Filter";
-import Card from "../../components/Card";
+import Text from "../../../components/Text";
+import SearchBar from "../../../components/SearchBar";
+import Filter from "../../../components/Filter";
+import Card from "../../../components/Card";
 
-import { news } from "../../moks/moks_news";
+import { news } from "../../../moks/moks_news";
 
 export default function News() {
 	const isDesktop: boolean = useIsDesktop();

@@ -8,7 +8,7 @@ interface FilterProps {
 
 export default function Filter({ label, selected, onSelect }: FilterProps) {
 	return (
-		<div className="relative max-h-max rounded-xl transition duration-300 bg-(--woodsmoke) border border-(--shark) has-checked:bg-(--button-bg) has-checked:border-(--button-bg) px-4 py-2">
+		<div className="relative max-h-max rounded-xl transition duration-300 bg-(--woodsmoke) border border-(--shark) has-checked:bg-(--bg-button) has-checked:border-(--bg-button) px-4 py-2">
 			<input
 				type="radio"
 				id={label}

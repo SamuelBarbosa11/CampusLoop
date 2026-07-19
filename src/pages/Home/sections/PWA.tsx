@@ -1,5 +1,5 @@
-import Text from "../../components/Text";
-import BubbleIcon from "../../components/BubbleIcon";
+import Text from "../../../components/Text";
+import BubbleIcon from "../../../components/BubbleIcon";
 
 import { BsStars } from "react-icons/bs";
 import { LuShieldCheck } from "react-icons/lu";
@@ -16,7 +16,7 @@ export default function PWA() {
 					<BsStars color="#C29FFF" />
 					<Text
 						variant="label"
-						className="text-(--manatee) font-bold uppercase"
+						className="text-(--secondary) font-bold uppercase"
 					>
 						PWA instalável
 					</Text>
@@ -28,7 +28,7 @@ export default function PWA() {
 
 				<Text
 					variant="description"
-					className="text-(--manatee) text-center max-w-xl"
+					className="text-(--secondary) text-center max-w-xl"
 				>
 					Não é outro app — é a mesma página, responsiva e compacta. Adicione à
 					tela inicial pelo navegador e use a barra inferior para navegar entre

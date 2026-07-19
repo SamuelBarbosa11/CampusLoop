@@ -1,11 +1,9 @@
 import { useNavigate } from "react-router";
 
-import { useIsDesktop } from "../../utils/useIsDesktop";
-import { scrollToSection } from "../../utils/scrollToSection";
+import { useIsDesktop } from "../../../utils/useIsDesktop";
+import { scrollToSection } from "../../../utils/scrollToSection";
 
-import Text from "../../components/Text";
-import Logo from "../../components/Logo";
-import Hello from "../../components/Hello";
+import Text from "../../../components/Text";
 
 import { IoIosAdd } from "react-icons/io";
 
@@ -13,8 +11,6 @@ export default function HeroSection() {
 	const navigate = useNavigate();
 
 	const isDesktop = useIsDesktop();
-	const isLoged = true;
-	const isInstalled = false;
 
 	return (
 		<section className="relative w-full mt-16 mb-8 md:mb-24 md:mt-24 flex flex-col items-center">
@@ -32,23 +28,6 @@ export default function HeroSection() {
 					bg-[radial-gradient(circle,rgba(194,159,255,0.18)_0%,rgba(194,159,255,0.18)_70%,transparent_100%)]
 				"
 			/>
-
-			{!isDesktop && (
-				<div className="absolute -top-12 w-full flex justify-between items-center">
-					<Logo />
-					{!isInstalled && (
-						<Text
-							as="button"
-							variant="heading"
-							className="text-(--secondary) font-semibold tracking-wider"
-						>
-							Instalar
-						</Text>
-					)}
-
-					{isLoged && <Hello />}
-				</div>
-			)}
 
 			{isDesktop && (
 				<div className="flex gap-2 p-3 py-1 mb-6 justify-center items-center bg-(--mauve)/10 border border-(--mauve)/20 rounded-full">
