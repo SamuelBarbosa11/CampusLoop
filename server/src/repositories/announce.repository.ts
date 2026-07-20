@@ -1,0 +1,96 @@
+import { supabase } from "../config/supabase.js";
+
+import type {
+	Announce,
+	AnnounceFilters,
+	CreateAnnounceDTO,
+	UpdateAnnounceDTO,
+} from "../types/announce.types.js";
+
+export async function findAll(filters: AnnounceFilters) {
+	let query = supabase.from("announces").select("*");
+
+	if (filters.category) {
+		query = query.eq("category", filters.category);
+	}
+
+	if (filters.donation !== undefined) {
+		query = query.eq("donation", filters.donation);
+	}
+
+	if (filters.user_id) {
+		query = query.eq("user_id", filters.user_id);
+	}
+
+	if (filters.search) {
+		query = query.ilike("title", `%${filters.search}%`);
+	}
+
+	switch (filters.sort) {
+		case "oldest":
+			query = query.order("created_at", { ascending: true });
+			break;
+
+		case "price-asc":
+			query = query.order("price", { ascending: true });
+			break;
+
+		case "price-desc":
+			query = query.order("price", { ascending: false });
+			break;
+
+		default:
+			query = query.order("created_at", { ascending: false });
+	}
+
+	const { data, error } = await query.order("created_at", {
+		ascending: false,
+	});
+
+	if (error) throw error;
+
+	return data;
+}
+
+export async function findById(id: string) {
+	const { data, error } = await supabase
+		.from("announces")
+		.select("*")
+		.eq("id", id)
+		.maybeSingle();
+
+	if (error) throw error;
+
+	return data as Announce;
+}
+
+export async function create(data: CreateAnnounceDTO) {
+	const { data: announce, error } = await supabase
+		.from("announces")
+		.insert(data)
+		.select()
+		.single();
+
+	if (error) throw error;
+
+	return announce as Announce;
+}
+
+export async function update(id: string, data: UpdateAnnounceDTO) {
+	const { data: announce, error } = await supabase
+		.from("announces")
+		.update(data)
+		.eq("id", id)
+		.select()
+		.single();
+
+	if (error) throw error;
+
+	return announce as Announce;
+}
+
+export async function remove(id: string) {
+	const { error } = await supabase.from("announces").delete().eq("id", id);
+
+	if (error) throw error;
+}
