@@ -10,7 +10,7 @@ import FormButton from "../../../components/form/FormButton";
 import Text from "../../../components/Text";
 
 import { validateEmail } from "../../../utils/validators";
-import { useIsDesktop } from "../../../utils/useIsDesktop";
+import { useIsDesktop } from "../../../hooks/useIsDesktop";
 
 interface RegisterFormProps {
 	setMode: (mode: AuthMode) => void;
@@ -162,8 +162,13 @@ export default function RegisterForm({ setMode }: RegisterFormProps) {
 						</Text>
 						<div className="h-px w-full bg-(--secondary)"></div>
 					</div>
-					
-					<FormButton type="button" backgroundColor="var(--shark)" color="white" onClick={() => setMode("login")}>
+
+					<FormButton
+						type="button"
+						backgroundColor="var(--shark)"
+						color="white"
+						onClick={() => setMode("login")}
+					>
 						Entrar
 					</FormButton>
 				</>

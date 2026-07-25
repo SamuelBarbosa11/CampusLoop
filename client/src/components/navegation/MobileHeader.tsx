@@ -6,7 +6,7 @@ import Text from "../Text";
 import Logo from "../Smalls/Logo";
 import Hello from "../Smalls/Hello";
 
-import useIsInstalled from "../../utils/useIsInstalled";
+import useIsInstalled from "../../hooks/useIsInstalled";
 
 export default function MobileHeader() {
 	const navigate = useNavigate();

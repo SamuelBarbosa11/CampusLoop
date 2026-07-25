@@ -5,7 +5,7 @@ import BottomNavigation from "./components/navegation/BottomNavigation";
 
 import MobileHeader from "./components/navegation/MobileHeader";
 
-import { useIsDesktop } from "./utils/useIsDesktop";
+import { useIsDesktop } from "./hooks/useIsDesktop";
 
 export default function Layout() {
 	const isDesktop: boolean = useIsDesktop();

@@ -2,7 +2,7 @@ import Text from "../Text";
 
 import { FaRegTrashAlt } from "react-icons/fa";
 
-import { useIsDesktop } from "../../utils/useIsDesktop";
+import { useIsDesktop } from "../../hooks/useIsDesktop";
 import { formatRelativeTime } from "../../utils/formatRelativeTime";
 
 import type { Announce } from "../../types/announce.types";

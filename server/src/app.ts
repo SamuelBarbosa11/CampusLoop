@@ -9,7 +9,12 @@ import { errorMiddleware } from "./middlewares/error.middleware.js";
 
 const app = express();
 
-app.use(cors());
+app.use(
+	cors({
+		origin: ["http://localhost:5173", "https://campusloop.vercel.app"],
+		credentials: true,
+	})
+);
 
 app.use(express.json());
 

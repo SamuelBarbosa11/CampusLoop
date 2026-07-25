@@ -7,7 +7,7 @@ import type { AuthMode } from "../types";
 
 import { getAuthErrorMessage } from "../../../utils/auth.errors";
 import { validateEmail } from "../../../utils/validators";
-import { useIsDesktop } from "../../../utils/useIsDesktop";
+import { useIsDesktop } from "../../../hooks/useIsDesktop";
 
 import FormButton from "../../../components/form/FormButton";
 import FormInput from "../../../components/form/FormInput";

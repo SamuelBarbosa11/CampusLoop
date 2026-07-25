@@ -7,7 +7,7 @@ import Spinner from "../components/Smalls/Spinner";
 
 import { useAnnounces } from "../hooks/api/useAnnounces";
 import { useFilters } from "../hooks/useFilters";
-import { useDebounce } from "../utils/useDebounce";
+import { useDebounce } from "../hooks/useDebounce";
 
 import type { Announce } from "../types/announce.types";
 
@@ -79,7 +79,7 @@ export default function Search() {
 							{announces.length > 0 ? (
 								announces.map((item, index) => (
 									<li key={index}>
-										<Card item={item} clickable/>
+										<Card item={item} clickable />
 									</li>
 								))
 							) : (

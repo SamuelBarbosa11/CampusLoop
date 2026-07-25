@@ -8,7 +8,7 @@ import EmptyState from "../../../components/Smalls/EmptyState";
 import { useFilters } from "../../../hooks/useFilters";
 import { useAnnounces } from "../../../hooks/api/useAnnounces";
 
-import { useIsDesktop } from "../../../utils/useIsDesktop";
+import { useIsDesktop } from "../../../hooks/useIsDesktop";
 
 import type { Announce } from "../../../types/announce.types";
 import Spinner from "../../../components/Smalls/Spinner";

@@ -13,8 +13,8 @@ import { IoIosAdd } from "react-icons/io";
 import { useFilters } from "../hooks/useFilters";
 import { useAnnounces } from "../hooks/api/useAnnounces";
 
-import { useDebounce } from "../utils/useDebounce";
-import { useIsDesktop } from "../utils/useIsDesktop";
+import { useDebounce } from "../hooks/useDebounce";
+import { useIsDesktop } from "../hooks/useIsDesktop";
 
 import type { Announce } from "../types/announce.types";
 

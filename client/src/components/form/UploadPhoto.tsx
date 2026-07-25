@@ -11,18 +11,18 @@ import clsx from "clsx";
 
 import Text from "../Text";
 
-import { useIsDesktop } from "../../utils/useIsDesktop";
+import { useIsDesktop } from "../../hooks/useIsDesktop";
 
 interface UploadPhotoProps {
 	file: File | null;
 	onFileChange(file: File | null): void;
-	
+
 	disabled?: boolean;
 	maxSize?: number;
 	accept?: string[];
 	preview?: boolean;
 	removable?: boolean;
-	
+
 	className?: string;
 }
 

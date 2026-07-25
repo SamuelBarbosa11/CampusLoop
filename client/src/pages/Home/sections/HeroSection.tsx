@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router";
 
-import { useIsDesktop } from "../../../utils/useIsDesktop";
+import { useIsDesktop } from "../../../hooks/useIsDesktop";
 import { scrollToSection } from "../../../utils/scrollToSection";
 
 import Text from "../../../components/Text";

@@ -19,13 +19,13 @@ import { useAuth } from "../hooks/useAuth";
 import { useAnnounces } from "../hooks/api/useAnnounces";
 import { useProfiles } from "../hooks/api/useProfiles";
 import { useUpload } from "../hooks/api/useUpload";
+import { useIsDesktop } from "../hooks/useIsDesktop";
 
 import { formatTelephone } from "../utils/formatTelephone";
 import openWhatsapp from "../utils/openWhatsapp";
 
 import type { Announce } from "../types/announce.types";
 import type { Profile, UpdateProfileDTO } from "../types/profile.types";
-import { useIsDesktop } from "../utils/useIsDesktop";
 
 export default function Profile() {
 	const { id } = useParams();
@@ -42,6 +42,7 @@ export default function Profile() {
 	const [announces, setAnnounces] = useState<Announce[]>([]);
 	const [editMode, setEditMode] = useState(false);
 	const [loadingChanges, setLoadingChanges] = useState(false);
+	const [loadingData, setLoadingData] = useState(true);
 
 	const inputRef = useRef<HTMLInputElement>(null);
 
@@ -83,9 +84,20 @@ export default function Profile() {
 	useEffect(() => {
 		if (!viewedProfileId) return;
 
-		findById(viewedProfileId).then(setViewedProfile).catch(console.error);
+		async function loadData(viewedProfileId: string) {
+			try {
+				setLoadingData(true);
+	
+				await findById(viewedProfileId).then(setViewedProfile).catch(console.error);
+	
+				await findByUserId(viewedProfileId).then(setAnnounces).catch(console.error);
+			} finally {
+				setLoadingData(false);
+			}
+		}
 
-		findByUserId(viewedProfileId).then(setAnnounces).catch(console.error);
+		loadData(viewedProfileId);
+
 	}, [viewedProfileId]);
 
 	function handleChange(event: ChangeEvent<HTMLInputElement>) {
@@ -144,78 +156,84 @@ export default function Profile() {
 						<ButtonBackTo className="fixed top-18 left-4 bg-(--background)" />
 					)}
 
-					<header className="flex flex-col items-center px-2 md:px-4">
-						{isOwner && (
-							<ExitButtom className="border border-(--shark) rounded-2xl px-4 py-2 ml-auto" />
-						)}
+					{!loadingData ? (
+						<header className="flex flex-col items-center px-2 md:px-4">
+							{isOwner && (
+								<ExitButtom className="border border-(--shark) rounded-2xl px-4 py-2 ml-auto" />
+							)}
 
-						<div className="w-full min-h-40 sm:min-h-32 flex mt-12 gap-4 sm:gap-8 md:gap-12">
-							<div id="profile-photo" className="my-auto shrink-0">
-								{formData.photo_url ? (
-									<img
-										src={formData.photo_url}
-										className="w-24 h-24 sm:w-32 sm:h-32 md:w-38 md:h-38 aspect-square rounded-full object-cover border border-(--shark)"
-									/>
-								) : (
-									<CgProfile className="w-32 h-32" />
-								)}
+							<div className="w-full min-h-40 sm:min-h-32 flex mt-4 md:mt-12 gap-4 sm:gap-8 md:gap-12">
+								<div id="profile-photo" className="my-auto shrink-0">
+									{formData.photo_url ? (
+										<img
+											src={formData.photo_url}
+											className="w-24 h-24 sm:w-32 sm:h-32 md:w-38 md:h-38 aspect-square rounded-full object-cover border border-(--shark)"
+										/>
+									) : (
+										<CgProfile className="w-32 h-32" />
+									)}
+								</div>
+
+								<div id="infos" className="flex flex-col justify-between">
+									<Text variant="title">{formData.name}</Text>
+
+									{formData.biography ? (
+										<Text variant="muted" className="line-clamp-3">
+											{formData.biography}
+										</Text>
+									) : (
+										<Text variant="muted" className="text-(--secondary)">
+											...bio
+										</Text>
+									)}
+
+									{formData.telephone ? (
+										<div className="flex items-center gap-2">
+											{!isOwner && (
+												<button
+													id="whatsapp-button"
+													type="button"
+													onClick={() => {
+														if (!formData.telephone) return;
+														openWhatsapp(
+															formData.telephone,
+															`Olá, ${formData.name}! Vi um anúncio seu no CampusLoop e tenho interesse.`
+														);
+													}}
+													className="w-8 h-8 md:w-10 md:h-10 shrink-0 rounded-full bg-(--shark) flex justify-center items-center cursor-pointer"
+													aria-label="Abrir conversa no WhatsApp"
+												>
+													<TbBrandWhatsapp className="w-full h-full p-2" />
+												</button>
+											)}
+
+											<Text variant="muted">{formData.telephone}</Text>
+										</div>
+									) : (
+										<Text variant="muted" className="text-(--secondary)">
+											(00) 9 9999-9999
+										</Text>
+									)}
+								</div>
 							</div>
 
-							<div id="infos" className="flex flex-col justify-between">
-								<Text variant="title">{formData.name}</Text>
-
-								{formData.biography ? (
-									<Text variant="muted" className="line-clamp-3">
-										{formData.biography}
-									</Text>
-								) : (
-									<Text variant="muted" className="text-(--secondary)">
-										...bio
-									</Text>
-								)}
-
-								{formData.telephone ? (
-									<div className="flex items-center gap-2">
-										{!isOwner && (
-											<button
-												id="whatsapp-button"
-												type="button"
-												onClick={() => {
-													if (!formData.telephone) return;
-													openWhatsapp(
-														formData.telephone,
-														`Olá, ${formData.name}! Vi um anúncio seu no CampusLoop e tenho interesse.`
-													);
-												}}
-												className="w-8 h-8 md:w-10 md:h-10 shrink-0 rounded-full bg-(--shark) flex justify-center items-center cursor-pointer"
-												aria-label="Abrir conversa no WhatsApp"
-											>
-												<TbBrandWhatsapp className="w-full h-full p-2" />
-											</button>
-										)}
-
-										<Text variant="muted">{formData.telephone}</Text>
-									</div>
-								) : (
-									<Text variant="muted" className="text-(--secondary)">
-										(00) 9 9999-9999
-									</Text>
-								)}
-							</div>
+							{isOwner && (
+								<FormButton
+									type="button"
+									backgroundColor="var(--shark)"
+									color="white"
+									className="w-full mt-4 cursor-pointer"
+									onClick={() => toggleEditMode()}
+								>
+									Editar Perfil
+								</FormButton>
+							)}
+						</header>
+					) : (
+						<div className="w-full h-64 flex justify-center items-center rounded-2xl border border-(--shark) mt-8 md:mt-32">
+							<Spinner />
 						</div>
-
-						{isOwner && (
-							<FormButton
-								type="button"
-								backgroundColor="var(--shark)"
-								color="white"
-								className="w-full mt-4 cursor-pointer"
-								onClick={() => toggleEditMode()}
-							>
-								Editar Perfil
-							</FormButton>
-						)}
-					</header>
+					)}
 
 					<div
 						id="galeria-announces"

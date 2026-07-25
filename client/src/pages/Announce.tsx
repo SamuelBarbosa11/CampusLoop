@@ -7,7 +7,7 @@ import UploadPhoto from "../components/form/UploadPhoto";
 
 import { useAnnounceForm } from "../hooks/useAnnounceForm";
 
-import { useIsDesktop } from "../utils/useIsDesktop";
+import { useIsDesktop } from "../hooks/useIsDesktop";
 
 export default function Announce() {
 	const isDesktop = useIsDesktop();

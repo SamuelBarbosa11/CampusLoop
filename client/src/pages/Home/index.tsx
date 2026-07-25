@@ -4,12 +4,12 @@ import News from "./sections/News";
 import PWA from "./sections/PWA";
 import Footer from "./sections/Footer";
 
-import { useIsDesktop } from "../../utils/useIsDesktop";
-import useIsInstalled from "../../utils/useIsInstalled";
+import { useIsDesktop } from "../../hooks/useIsDesktop";
+import useIsInstalled from "../../hooks/useIsInstalled";
 
 export default function Home() {
 	const isDesktop = useIsDesktop();
-  const isInstalled = useIsInstalled();
+	const isInstalled = useIsInstalled();
 
 	return (
 		<div className="relative">
@@ -26,7 +26,7 @@ export default function Home() {
           bg-[radial-gradient(circle,rgba(194,159,255,0.18)_0%,rgba(194,159,255,0.18)_70%,transparent_100%)]
         "
 			/>
-      {!isInstalled && <HeroSection />}
+			{!isInstalled && <HeroSection />}
 			{isDesktop && <Impact />}
 			<News />
 			{isDesktop && (

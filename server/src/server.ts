@@ -5,5 +5,5 @@ import app from "./app.js";
 const PORT = process.env.PORT || 3001;
 
 app.listen(PORT, () => {
-	console.log(`API Online: http://localhost:${PORT}`);
+	console.log(`🚀 API iniciada na porta ${PORT}`);
 });
