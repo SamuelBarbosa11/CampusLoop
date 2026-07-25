@@ -11,7 +11,10 @@ const app = express();
 
 app.use(
 	cors({
-		origin: ["http://localhost:5173", "https://campusloop.vercel.app"],
+		origin: [
+      "http://localhost:5173",
+      "https://campusloop-vortex.vercel.app",
+    ],
 		credentials: true,
 	})
 );
