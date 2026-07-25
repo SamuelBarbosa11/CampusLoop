@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 
-import Card from "../components/Cards/Card";
-import Filters from "../components/Search/Filters";
-import EmptyState from "../components/Smalls/EmptyState";
-import Spinner from "../components/Smalls/Spinner";
+import Card from "../components/cards/Card";
+import Filters from "../components/search/Filters";
+import EmptyState from "../components/smalls/EmptyState";
+import Spinner from "../components/smalls/Spinner";
 
 import { useAnnounces } from "../hooks/api/useAnnounces";
 import { useFilters } from "../hooks/useFilters";

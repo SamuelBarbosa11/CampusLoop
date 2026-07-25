@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 
-import Text from "../../../components/Text";
-import Card from "../../../components/Cards/Card";
-import Filters from "../../../components/Search/Filters";
-import EmptyState from "../../../components/Smalls/EmptyState";
+import Text from "../../../components/text/Text";
+import Card from "../../../components/cards/Card";
+import Filters from "../../../components/search/Filters";
+import EmptyState from "../../../components/smalls/EmptyState";
 
 import { useFilters } from "../../../hooks/useFilters";
 import { useAnnounces } from "../../../hooks/api/useAnnounces";
@@ -11,7 +11,7 @@ import { useAnnounces } from "../../../hooks/api/useAnnounces";
 import { useIsDesktop } from "../../../hooks/useIsDesktop";
 
 import type { Announce } from "../../../types/announce.types";
-import Spinner from "../../../components/Smalls/Spinner";
+import Spinner from "../../../components/smalls/Spinner";
 
 export default function News() {
 	const isDesktop = useIsDesktop();

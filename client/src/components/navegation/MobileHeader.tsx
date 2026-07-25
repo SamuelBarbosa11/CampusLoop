@@ -2,9 +2,9 @@ import { useNavigate } from "react-router";
 
 import { useAuth } from "../../hooks/useAuth";
 
-import Text from "../Text";
-import Logo from "../Smalls/Logo";
-import Hello from "../Smalls/Hello";
+import Text from "../text/Text";
+import Logo from "../smalls/Logo";
+import Hello from "../smalls/Hello";
 
 import useIsInstalled from "../../hooks/useIsInstalled";
 

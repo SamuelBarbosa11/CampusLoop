@@ -8,7 +8,7 @@ import type { AuthMode } from "../types";
 import FormInput from "../../../components/form/FormInput";
 import FormButton from "../../../components/form/FormButton";
 
-import Text from "../../../components/Text";
+import Text from "../../../components/text/Text";
 
 interface ForgotPasswordFormProps {
 	setMode: (mode: AuthMode) => void;

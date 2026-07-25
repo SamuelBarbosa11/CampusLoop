@@ -1,4 +1,4 @@
-import Filter from "../Search/Filter";
+import Filter from "../search/Filter";
 
 interface DonationProps {
 	selected: boolean;

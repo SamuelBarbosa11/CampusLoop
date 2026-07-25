@@ -2,7 +2,7 @@ import { useNavigate } from "react-router";
 
 import { useAuth } from "../../../hooks/useAuth";
 
-import Text from "../../../components/Text";
+import Text from "../../../components/text/Text";
 import ExitButtom from "../../../components/navegation/ExitButtom";
 
 import { FaArrowRight } from "react-icons/fa6";

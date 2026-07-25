@@ -1,4 +1,4 @@
-import Text from "../../../components/Text";
+import Text from "../../../components/text/Text";
 
 export default function Impact() {
 	return (

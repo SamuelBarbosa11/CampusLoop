@@ -5,7 +5,7 @@ import { GrFormView, GrFormViewHide } from "react-icons/gr";
 
 import type { InputHTMLAttributes } from "react";
 
-import Text from "../Text";
+import Text from "../text/Text";
 
 interface FormInputProps extends InputHTMLAttributes<HTMLInputElement> {
 	label: string;

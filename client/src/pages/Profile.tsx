@@ -1,12 +1,12 @@
 import { useEffect, useState, useRef, type ChangeEvent } from "react";
 import { useParams } from "react-router";
 
-import Text from "../components/Text";
+import Text from "../components/text/Text";
 import FormInput from "../components/form/FormInput";
 import FormButton from "../components/form/FormButton";
-import Card from "../components/Cards/Card";
-import EmptyState from "../components/Smalls/EmptyState";
-import Spinner from "../components/Smalls/Spinner";
+import Card from "../components/cards/Card";
+import EmptyState from "../components/smalls/EmptyState";
+import Spinner from "../components/smalls/Spinner";
 import ExitButtom from "../components/navegation/ExitButtom";
 import ButtonBackTo from "../components/navegation/ButtonBackTo";
 
@@ -87,17 +87,20 @@ export default function Profile() {
 		async function loadData(viewedProfileId: string) {
 			try {
 				setLoadingData(true);
-	
-				await findById(viewedProfileId).then(setViewedProfile).catch(console.error);
-	
-				await findByUserId(viewedProfileId).then(setAnnounces).catch(console.error);
+
+				await findById(viewedProfileId)
+					.then(setViewedProfile)
+					.catch(console.error);
+
+				await findByUserId(viewedProfileId)
+					.then(setAnnounces)
+					.catch(console.error);
 			} finally {
 				setLoadingData(false);
 			}
 		}
 
 		loadData(viewedProfileId);
-
 	}, [viewedProfileId]);
 
 	function handleChange(event: ChangeEvent<HTMLInputElement>) {

@@ -1,5 +1,5 @@
-import Text from "../../../components/Text";
-import BubbleIcon from "../../../components/Smalls/BubbleIcon";
+import Text from "../../../components/text/Text";
+import BubbleIcon from "../../../components/smalls/BubbleIcon";
 
 import { BsStars } from "react-icons/bs";
 import { LuShieldCheck } from "react-icons/lu";

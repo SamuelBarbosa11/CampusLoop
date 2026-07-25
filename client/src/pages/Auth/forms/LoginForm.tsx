@@ -12,7 +12,7 @@ import { useIsDesktop } from "../../../hooks/useIsDesktop";
 import FormButton from "../../../components/form/FormButton";
 import FormInput from "../../../components/form/FormInput";
 
-import Text from "../../../components/Text";
+import Text from "../../../components/text/Text";
 
 interface LoginFormProps {
 	setMode: (mode: AuthMode) => void;

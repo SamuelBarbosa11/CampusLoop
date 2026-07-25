@@ -2,7 +2,7 @@ import type { CSSProperties } from "react";
 import type { IconType } from "react-icons";
 import clsx from "clsx";
 
-import Text from "../Text";
+import Text from "../text/Text";
 
 import { useNavigate } from "react-router";
 

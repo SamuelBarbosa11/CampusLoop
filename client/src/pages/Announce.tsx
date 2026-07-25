@@ -1,8 +1,8 @@
-import Text from "../components/Text";
+import Text from "../components/text/Text";
 import ButtonBackTo from "../components/navegation/ButtonBackTo";
 import FormInput from "../components/form/FormInput";
 import Donation from "../components/form/Donation";
-import Spinner from "../components/Smalls/Spinner";
+import Spinner from "../components/smalls/Spinner";
 import UploadPhoto from "../components/form/UploadPhoto";
 
 import { useAnnounceForm } from "../hooks/useAnnounceForm";

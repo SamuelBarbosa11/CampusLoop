@@ -9,7 +9,7 @@ import {
 
 import clsx from "clsx";
 
-import Text from "../Text";
+import Text from "../text/Text";
 
 import { useIsDesktop } from "../../hooks/useIsDesktop";
 

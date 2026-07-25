@@ -3,9 +3,9 @@ import { useNavigate } from "react-router";
 import { useIsDesktop } from "../../../hooks/useIsDesktop";
 import { scrollToSection } from "../../../utils/scrollToSection";
 
-import Text from "../../../components/Text";
+import Text from "../../../components/text/Text";
 import { IoIosAdd } from "react-icons/io";
-import TextAnimated from "../../../components/TextAnimated";
+import TextAnimated from "../../../components/text/TextAnimated";
 
 export default function HeroSection() {
 	const navigate = useNavigate();

@@ -3,8 +3,8 @@ import type { CSSProperties } from "react";
 
 import type { ButtonHTMLAttributes } from "react";
 
-import Text from "../Text";
-import Spinner from "../Smalls/Spinner";
+import Text from "../text/Text";
+import Spinner from "../smalls/Spinner";
 
 interface FormButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 	loading?: boolean;

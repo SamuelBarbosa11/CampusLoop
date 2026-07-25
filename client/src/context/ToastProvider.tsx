@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 
 import type { ReactNode } from "react";
 
-import Toast from "../components/Smalls/Toast";
+import Toast from "../components/smalls/Toast";
 
 import { ToastContext, type ToastState } from "./ToastContext";
 
@@ -39,7 +39,7 @@ export default function ToastProvider({ children }: Props) {
 
 	function hide() {
 		clearTimeout(timeoutRef.current);
-		
+
 		setState((prev) => ({
 			...prev,
 			visible: false,

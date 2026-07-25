@@ -5,8 +5,8 @@ import { useAuth } from "../../hooks/useAuth";
 
 import { logout } from "../../services/auth.service";
 
-import Text from "../Text";
-import Spinner from "../Smalls/Spinner";
+import Text from "../text/Text";
+import Spinner from "../smalls/Spinner";
 import { MdLogout } from "react-icons/md";
 
 type ExitButtomProps = {

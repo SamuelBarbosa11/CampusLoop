@@ -2,11 +2,11 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 
 import ButtonBackTo from "../components/navegation/ButtonBackTo";
-import Text from "../components/Text";
-import MyAnnounceCard from "../components/Cards/MyAnnounceCard";
-import Filters from "../components/Search/Filters";
-import EmptyState from "../components/Smalls/EmptyState";
-import Spinner from "../components/Smalls/Spinner";
+import Text from "../components/text/Text";
+import MyAnnounceCard from "../components/cards/MyAnnounceCard";
+import Filters from "../components/search/Filters";
+import EmptyState from "../components/smalls/EmptyState";
+import Spinner from "../components/smalls/Spinner";
 
 import { IoIosAdd } from "react-icons/io";
 
