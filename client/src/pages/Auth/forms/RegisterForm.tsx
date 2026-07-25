@@ -1,15 +1,16 @@
 import { useState } from "react";
 import type { ChangeEvent } from "react";
 
-import { useAuth } from "../../../auth";
+import { useAuth } from "../../../hooks/useAuth";
 
 import type { AuthMode } from "../types";
 
-import { validateEmail } from "../../../utils/validators";
-
-import AuthInput from "../components/AuthInput";
-import AuthButton from "../components/AuthButton";
+import FormInput from "../../../components/form/FormInput";
+import FormButton from "../../../components/form/FormButton";
 import Text from "../../../components/Text";
+
+import { validateEmail } from "../../../utils/validators";
+import { useIsDesktop } from "../../../utils/useIsDesktop";
 
 interface RegisterFormProps {
 	setMode: (mode: AuthMode) => void;
@@ -48,8 +49,12 @@ export default function RegisterForm({ setMode }: RegisterFormProps) {
 		try {
 			setLoading(true);
 
-			// Validação de Email
+			// Validação de nome
+			if (!formData.name) {
+				setError("Informe um nome para cadastro");
+			}
 
+			// Validação de Email
 			const emailError = validateEmail(formData.email);
 
 			if (emailError) {
@@ -58,7 +63,6 @@ export default function RegisterForm({ setMode }: RegisterFormProps) {
 			}
 
 			// Validação de Senhas
-
 			if (formData.password !== formData.confirmPassword) {
 				setError("As senhas devem ser iguais!");
 				return;
@@ -76,6 +80,8 @@ export default function RegisterForm({ setMode }: RegisterFormProps) {
 		}
 	}
 
+	const isDesktop = useIsDesktop();
+
 	return (
 		<form
 			className="grid gap-4"
@@ -84,7 +90,7 @@ export default function RegisterForm({ setMode }: RegisterFormProps) {
 				void handleSubmit();
 			}}
 		>
-			<AuthInput
+			<FormInput
 				label="Nome"
 				name="name"
 				value={formData.name}
@@ -92,7 +98,7 @@ export default function RegisterForm({ setMode }: RegisterFormProps) {
 				required
 			/>
 
-			<AuthInput
+			<FormInput
 				label="E-mail"
 				type="email"
 				name="email"
@@ -101,7 +107,7 @@ export default function RegisterForm({ setMode }: RegisterFormProps) {
 				required
 			/>
 
-			<AuthInput
+			<FormInput
 				label="Senha"
 				type="password"
 				name="password"
@@ -111,7 +117,7 @@ export default function RegisterForm({ setMode }: RegisterFormProps) {
 				required
 			/>
 
-			<AuthInput
+			<FormInput
 				label="Confirmar senha"
 				type="password"
 				name="confirmPassword"
@@ -127,22 +133,41 @@ export default function RegisterForm({ setMode }: RegisterFormProps) {
 				</Text>
 			)}
 
-			<AuthButton type="submit" loading={loading} className="mt-2">
+			<FormButton type="submit" loading={loading} className="mt-2">
 				Criar conta
-			</AuthButton>
+			</FormButton>
 
-			<Text
-				as="button"
-				type="button"
-				variant="muted"
-				className="text-(--secondary) transition-colors duration-200 hover:text-(--primary)"
-				onClick={() => setMode("login")}
-			>
-				Já tem uma Conta?{" "}
-				<Text variant="muted" className="hover:underline">
-					Entrar
+			{isDesktop ? (
+				<Text
+					variant="heading"
+					className="text-(--secondary) transition-colors duration-200 hover:text-(--primary) text-center cursor-default"
+				>
+					Já tem uma Conta?{" "}
+					<Text
+						as="button"
+						type="button"
+						variant="heading"
+						className="hover:underline cursor-pointer"
+						onClick={() => setMode("login")}
+					>
+						Entrar
+					</Text>
 				</Text>
-			</Text>
+			) : (
+				<>
+					<div className="flex justify-center items-center gap-2">
+						<div className="h-px w-full bg-(--secondary)"></div>
+						<Text variant="muted" className="text-(--secondary) shrink-0">
+							Já tem uma Conta?
+						</Text>
+						<div className="h-px w-full bg-(--secondary)"></div>
+					</div>
+					
+					<FormButton type="button" backgroundColor="var(--shark)" color="white" onClick={() => setMode("login")}>
+						Entrar
+					</FormButton>
+				</>
+			)}
 		</form>
 	);
 }

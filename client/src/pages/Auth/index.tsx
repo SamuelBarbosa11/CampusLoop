@@ -1,8 +1,9 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router";
 
-import { useAuth } from "../../auth";
+import { useAuth } from "../../hooks/useAuth";
 
+import ButtonBackTo from "../../components/navegation/ButtonBackTo";
 import AuthCard from "./AuthCard";
 
 import LoginForm from "./forms/LoginForm";
@@ -11,7 +12,6 @@ import ForgotPasswordForm from "./forms/ForgotPasswordForm";
 import ResetPasswordForm from "./forms/ResetPasswordForm";
 
 import { useAuthMode } from "./hooks/useAuthMode";
-import BackToHome from "../../components/navegation/BackToHome";
 
 export default function Auth() {
 	const { mode, setMode } = useAuthMode();
@@ -64,7 +64,7 @@ export default function Auth() {
 
 	return (
 		<section className="absolute inset-0 bg-(--woodsmoke-tertiary) flex min-h-screen justify-center items-center">
-			<BackToHome className="absolute top-4 left-4" />
+			<ButtonBackTo tag="/" className="absolute top-4 left-4" />
 
 			<AuthCard title={legends[mode].title} subtitle={legends[mode].subtitle}>
 				{forms[mode]}

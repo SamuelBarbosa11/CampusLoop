@@ -1,5 +1,5 @@
 import Text from "../../../components/Text";
-import BubbleIcon from "../../../components/BubbleIcon";
+import BubbleIcon from "../../../components/Smalls/BubbleIcon";
 
 import { BsStars } from "react-icons/bs";
 import { LuShieldCheck } from "react-icons/lu";
@@ -37,7 +37,7 @@ export default function PWA() {
 			</div>
 
 			<div className="flex flex-wrap max-w-2xl gap-3 mt-8">
-				<div className="flex w-32 sm:w-38 md:w-46 lg:w-54 bg-(--woodsmoke) justify-center items-center border rounded-2xl border-(--shark) gap-3 p-4">
+				<div className="flex w-32 sm:w-38 md:w-46 lg:w-54 bg-(--woodsmoke) justify-center items-center border rounded-2xl border-(--shark) cursor-default gap-3 p-4">
 					<BubbleIcon
 						icon={LuShieldCheck}
 						color="var(--mauve)"
@@ -50,7 +50,7 @@ export default function PWA() {
 					</Text>
 				</div>
 
-				<div className="flex w-32 sm:w-38 md:w-46 lg:w-54 bg-(--woodsmoke) justify-center items-center border rounded-2xl border-(--shark) gap-3 p-4">
+				<div className="flex w-32 sm:w-38 md:w-46 lg:w-54 bg-(--woodsmoke) justify-center items-center border rounded-2xl border-(--shark) cursor-default gap-3 p-4">
 					<BubbleIcon
 						icon={LuLeaf}
 						color="var(--mauve)"
@@ -63,7 +63,7 @@ export default function PWA() {
 					</Text>
 				</div>
 
-				<div className="flex w-32 sm:w-38 md:w-46 lg:w-54 bg-(--woodsmoke) justify-center items-center border rounded-2xl border-(--shark) gap-3 p-4">
+				<div className="flex w-32 sm:w-38 md:w-46 lg:w-54 bg-(--woodsmoke) justify-center items-center border rounded-2xl border-(--shark) cursor-default gap-3 p-4">
 					<BubbleIcon
 						icon={BsStars}
 						color="var(--mauve)"

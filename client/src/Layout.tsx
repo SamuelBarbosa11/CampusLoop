@@ -1,9 +1,9 @@
 import { Outlet, useLocation } from "react-router";
 
-import Navbar from "./components/navegation/Navbar";
+import NavBar from "./components/navegation/NavBar";
 import BottomNavigation from "./components/navegation/BottomNavigation";
 
-import MobileHeader from "./components/MobileHeader";
+import MobileHeader from "./components/navegation/MobileHeader";
 
 import { useIsDesktop } from "./utils/useIsDesktop";
 
@@ -17,7 +17,7 @@ export default function Layout() {
 		<div className="w-full">
 			{!hideNavigation &&
 				(isDesktop ? (
-					<Navbar />
+					<NavBar />
 				) : (
 					<>
 						<BottomNavigation />

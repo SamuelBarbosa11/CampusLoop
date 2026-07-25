@@ -2,15 +2,15 @@ import { useState } from "react";
 
 import type { ChangeEvent } from "react";
 
-import { useAuth } from "../../../auth";
+import { useAuth } from "../../../hooks/useAuth";
 import type { AuthMode } from "../types";
 
-import { getAuthErrorMessage } from "../../../auth/auth.errors";
+import { getAuthErrorMessage } from "../../../utils/auth.errors";
 import { validateEmail } from "../../../utils/validators";
 import { useIsDesktop } from "../../../utils/useIsDesktop";
 
-import AuthButton from "../components/AuthButton";
-import AuthInput from "../components/AuthInput";
+import FormButton from "../../../components/form/FormButton";
+import FormInput from "../../../components/form/FormInput";
 
 import Text from "../../../components/Text";
 
@@ -48,7 +48,6 @@ export default function LoginForm({ setMode }: LoginFormProps) {
 			setLoading(true);
 
 			// Validação de Email
-
 			const emailError = validateEmail(formData.email);
 
 			if (emailError) {
@@ -57,8 +56,6 @@ export default function LoginForm({ setMode }: LoginFormProps) {
 			}
 
 			await login(formData);
-
-			// depois vamos redirecionar
 		} catch (error) {
 			setError(getAuthErrorMessage(error));
 		} finally {
@@ -77,7 +74,7 @@ export default function LoginForm({ setMode }: LoginFormProps) {
 				void handleSubmit();
 			}}
 		>
-			<AuthInput
+			<FormInput
 				label="E-mail"
 				type="email"
 				name="email"
@@ -86,7 +83,7 @@ export default function LoginForm({ setMode }: LoginFormProps) {
 				required
 			/>
 
-			<AuthInput
+			<FormInput
 				label="Senha"
 				type="password"
 				name="password"
@@ -112,24 +109,27 @@ export default function LoginForm({ setMode }: LoginFormProps) {
 				</Text>
 			)}
 
-			<AuthButton
+			<FormButton
 				type="submit"
 				loading={loading}
 				backgroundColor="var(--bg-button)"
 			>
 				Entrar
-			</AuthButton>
+			</FormButton>
 
 			{isDesktop ? (
 				<Text
-					as="button"
 					variant="heading"
-					type="button"
-					className="text-(--secondary) transition duration-300 hover:text-(--text-primary)"
-					onClick={() => setMode("register")}
+					className="text-(--secondary) transition duration-300 hover:text-(--text-primary) text-center cursor-default"
 				>
 					Primeira vez no CampusLoop?{" "}
-					<Text variant="heading" className="hover:underline">
+					<Text
+						as="button"
+						type="button"
+						variant="heading"
+						className="hover:underline cursor-pointer"
+						onClick={() => setMode("register")}
+					>
 						Criar conta
 					</Text>
 				</Text>
@@ -142,9 +142,9 @@ export default function LoginForm({ setMode }: LoginFormProps) {
 						</Text>
 						<div className="h-px w-full bg-(--secondary)"></div>
 					</div>
-					<AuthButton type="submit" loading={loading}>
+					<FormButton type="button" onClick={() => setMode("register")}>
 						Criar conta
-					</AuthButton>
+					</FormButton>
 				</>
 			)}
 		</form>

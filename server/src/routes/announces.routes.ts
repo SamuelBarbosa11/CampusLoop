@@ -12,6 +12,14 @@ const router = Router();
 
 router.get("/", announceController.getAll);
 
+router.get(
+	"/me",
+	authenticate,
+	announceController.getMine
+);
+
+router.get("/user/:id", announceController.getByUserId);
+
 router.get("/:id", announceController.getById);
 
 router.post(

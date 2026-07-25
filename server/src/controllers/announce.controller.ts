@@ -4,9 +4,7 @@ import * as announceService from "../services/announce.service.js";
 
 import { announceFiltersSchema } from "../schemas/filters.schema.js";
 
-type Params = {
-	id: string;
-};
+import type { Params } from "../types/params.types.js";
 
 export async function getAll(req: Request, res: Response) {
 	const filters = announceFiltersSchema.parse(req.query);
@@ -20,6 +18,18 @@ export async function getById(req: Request<Params>, res: Response) {
 	const announce = await announceService.findById(req.params.id);
 
 	res.json(announce);
+}
+
+export async function getByUserId(req: Request<Params>, res: Response) {
+	const announce = await announceService.findByUserId(req.params.id);
+
+	res.json(announce);
+}
+
+export async function getMine(req: Request, res: Response) {
+	const announces = await announceService.findByUserId(req.user.id);
+
+	res.json(announces);
 }
 
 export async function create(req: Request, res: Response) {

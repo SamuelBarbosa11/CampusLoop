@@ -1,28 +1,57 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
+import Text from "../../../components/Text";
+import Card from "../../../components/Cards/Card";
+import Filters from "../../../components/Search/Filters";
+import EmptyState from "../../../components/Smalls/EmptyState";
+
+import { useFilters } from "../../../hooks/useFilters";
+import { useAnnounces } from "../../../hooks/api/useAnnounces";
 
 import { useIsDesktop } from "../../../utils/useIsDesktop";
 
-import Text from "../../../components/Text";
-import SearchBar from "../../../components/SearchBar";
-import Filter from "../../../components/Filter";
-import Card from "../../../components/Card";
-
-import { news } from "../../../moks/moks_news";
+import type { Announce } from "../../../types/announce.types";
+import Spinner from "../../../components/Smalls/Spinner";
 
 export default function News() {
-	const isDesktop: boolean = useIsDesktop();
+	const isDesktop = useIsDesktop();
 
-	const filters = [
+	const { findAll, loadingAnnounces } = useAnnounces();
+
+	const [announces, setAnnounces] = useState<Announce[]>([]);
+
+	const filters = useFilters();
+
+	const categories = [
 		"Todos",
-		...new Set(news.map((item) => item.category)),
-	] as const;
+		...Array.from(new Set(announces.map((a) => a.category))),
+	];
 
-	const [selectedFilter, setSelectedFilter] = useState("Todos");
+	const orders = [
+		{
+			label: "Recente",
+			value: "recent",
+		},
+		{
+			label: "Menor Preço",
+			value: "price-asc",
+		},
+		{
+			label: "Maior Preço",
+			value: "price-desc",
+		},
+	];
 
-	const filteredNews =
-		selectedFilter === "Todos"
-			? news
-			: news.filter((item) => item.category === selectedFilter);
+	useEffect(() => {
+		findAll({
+			category: filters.category,
+			donation: filters.donation,
+			search: filters.search,
+			sort: filters.sort,
+		})
+			.then(setAnnounces)
+			.catch(console.error);
+	}, [filters.category, filters.donation, filters.search, filters.sort]);
 
 	return (
 		<section id="news" className="mb-48">
@@ -37,30 +66,45 @@ export default function News() {
 						</Text>
 					</div>
 
-					<div className="w-full md:w-auto max-h-max flex flex-col gap-2">
-						<SearchBar />
-
-						<div className="w-8/10 md:w-auto flex gap-2 overflow-x-auto">
-							{filters.map((filter) => (
-								<Filter
-									key={filter}
-									label={filter}
-									selected={selectedFilter === filter}
-									onSelect={() => setSelectedFilter(filter)}
-								/>
-							))}
-						</div>
+					<div className="w-auto max-h-max flex flex-col gap-2">
+						<Filters
+							search={filters.search}
+							onSearchChange={filters.setSearch}
+							categories={categories}
+							sorts={orders}
+							category={filters.category}
+							donation={filters.donation}
+							sort={filters.sort}
+							onCategoryChange={filters.selectCategory}
+							onDonationToggle={filters.toggleDonation}
+							onSortChange={filters.selectSort}
+						/>
 					</div>
 				</header>
 			)}
 
 			<div id="carrossel-cards" className="md:overflow-x-auto py-6">
 				<ul className="flex flex-wrap justify-center md:justify-start md:flex-nowrap gap-6 md:px-3">
-					{filteredNews.map((item) => (
-						<li key={item.id}>
-							<Card item={item} />
-						</li>
-					))}
+					{loadingAnnounces ? (
+						<div className="w-full min-h-screen flex justify-center items-center">
+							<Spinner />
+						</div>
+					) : (
+						<>
+							{announces.length > 0 ? (
+								announces.map((item, index) => (
+									<li key={index}>
+										<Card item={item} clickable />
+									</li>
+								))
+							) : (
+								<EmptyState
+									title="Nenhum anúncio encontrado"
+									subtitle="Tente alterar os filtros"
+								/>
+							)}{" "}
+						</>
+					)}
 				</ul>
 			</div>
 		</section>

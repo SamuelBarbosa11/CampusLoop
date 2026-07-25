@@ -1,15 +1,18 @@
 import { useNavigate } from "react-router";
-import { useAuth } from "../../auth";
+import { useAuth } from "../../hooks/useAuth";
 
 import Text from "../Text";
-import Logo from "../Logo";
-import Hello from "../Hello";
+import Logo from "../Smalls/Logo";
+import Hello from "../Smalls/Hello";
 
 import { scrollToSection } from "../../utils/scrollToSection";
 
-export default function Navbar() {
+export default function NavBar() {
 	const navigate = useNavigate();
 	const { isAuthenticated } = useAuth();
+
+	const esperar = (ms: number) =>
+		new Promise((resolve) => setTimeout(resolve, ms));
 
 	return (
 		<nav className="fixed top-0 z-10 flex justify-between items-center w-full py-4 px-6 bg-(--navbar) backdrop-blur-md">
@@ -21,27 +24,41 @@ export default function Navbar() {
 						as="button"
 						variant="heading"
 						className="cursor-pointer text-(--secondary) hover:text-(--mauve) transition duration-300 ease-in-out"
-						onClick={() => scrollToSection("news")}
+						onClick={async () => {
+							navigate("/");
+							await esperar(500);
+							scrollToSection("news");
+						}}
 					>
 						Vitrine
 					</Text>
 				</li>
+
 				<li>
 					<Text
 						as="button"
 						variant="heading"
 						className="cursor-pointer text-(--secondary) hover:text-(--mauve) transition duration-300 ease-in-out"
-						onClick={() => scrollToSection("impact")}
+						onClick={async () => {
+							navigate("/");
+							await esperar(500);
+							scrollToSection("impact");
+						}}
 					>
 						Impacto
 					</Text>
 				</li>
+
 				<li>
 					<Text
 						as="button"
 						variant="heading"
 						className="cursor-pointer text-(--secondary) hover:text-(--mauve) transition duration-300 ease-in-out"
-						onClick={() => scrollToSection("pwa")}
+						onClick={async () => {
+							navigate("/");
+							await esperar(500);
+							scrollToSection("pwa");
+						}}
 					>
 						Instalar
 					</Text>
@@ -55,18 +72,17 @@ export default function Navbar() {
 					<button
 						id="sign-in"
 						onClick={() => navigate("/auth")}
-						className="cursor-pointer text-(--secondary) hover:text-(--primary) transition duration-300 ease-in-out"
+						className="cursor-pointer text-(--secondary) transition duration-300 ease-in-out hover:text-(--primary)"
 					>
 						Entrar
 					</button>
 				)}
 
 				<button
-					id="announce"
-					onClick={() => navigate("/announce")}
-					className="button rounded-full px-4 py-2"
+					onClick={() => navigate("/dashboard")}
+					className="button rounded-full transition duration-300 ease-in-out hover:scale-105 px-4 py-2"
 				>
-					Anunciar
+					Anúncios
 				</button>
 			</div>
 		</nav>

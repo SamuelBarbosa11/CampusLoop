@@ -22,19 +22,25 @@ export async function uploadImage(file: Express.Multer.File) {
 
 	formData.append("image", file.buffer.toString("base64"));
 
-	const response = await fetch(
-		`https://api.imgbb.com/1/upload?key=${process.env.IMGBB_API_KEY}`,
-		{
-			method: "POST",
-			body: formData,
+	try {
+		const response = await fetch(
+			`https://api.imgbb.com/1/upload?key=${process.env.IMGBB_API_KEY}`,
+			{
+				method: "POST",
+				body: formData,
+			}
+		);
+		
+		if (!response.ok) {
+			throw new AppError("Erro ao enviar imagem.");
 		}
-	);
 
-	if (!response.ok) {
-		throw new AppError("Erro ao enviar imagem.");
+		const result = await response.json();
+
+		return result.data.url;
+	} catch (error) {
+		console.error(error);
+
+		throw new AppError("Não foi possível conectar ao ImgBB.", 500);
 	}
-
-	const result = await response.json();
-
-	return result.data.url;
 }

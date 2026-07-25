@@ -8,7 +8,14 @@ import type {
 } from "../types/announce.types.js";
 
 export async function findAll(filters: AnnounceFilters) {
-	let query = supabase.from("announces").select("*");
+	let query = supabase.from("announces").select(`
+		*,
+		user:profiles(
+				id,
+				name,
+				photo_url
+		)
+	`);
 
 	if (filters.category) {
 		query = query.eq("category", filters.category);
@@ -23,12 +30,14 @@ export async function findAll(filters: AnnounceFilters) {
 	}
 
 	if (filters.search) {
-		query = query.ilike("title", `%${filters.search}%`);
+		query = query.or(
+			`title.ilike.%${filters.search}%,description.ilike.%${filters.search}%`
+		);
 	}
 
 	switch (filters.sort) {
-		case "oldest":
-			query = query.order("created_at", { ascending: true });
+		case "recent":
+			query = query.order("created_at", { ascending: false });
 			break;
 
 		case "price-asc":
@@ -43,9 +52,7 @@ export async function findAll(filters: AnnounceFilters) {
 			query = query.order("created_at", { ascending: false });
 	}
 
-	const { data, error } = await query.order("created_at", {
-		ascending: false,
-	});
+	const { data, error } = await query;
 
 	if (error) throw error;
 
@@ -61,7 +68,26 @@ export async function findById(id: string) {
 
 	if (error) throw error;
 
-	return data as Announce;
+	return data;
+}
+
+export async function findByUserId(userId: string) {
+	const { data, error } = await supabase
+		.from("announces")
+		.select(`
+			*,
+			user:profiles(
+				id,
+				name,
+				photo_url
+			)
+		`)
+		.eq("user_id", userId)
+		.order("created_at", { ascending: false });
+
+	if (error) throw error;
+
+	return data;
 }
 
 export async function create(data: CreateAnnounceDTO) {
@@ -73,7 +99,7 @@ export async function create(data: CreateAnnounceDTO) {
 
 	if (error) throw error;
 
-	return announce as Announce;
+	return announce;
 }
 
 export async function update(id: string, data: UpdateAnnounceDTO) {
@@ -86,7 +112,7 @@ export async function update(id: string, data: UpdateAnnounceDTO) {
 
 	if (error) throw error;
 
-	return announce as Announce;
+	return announce;
 }
 
 export async function remove(id: string) {

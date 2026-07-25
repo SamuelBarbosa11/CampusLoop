@@ -47,6 +47,15 @@ function App() {
 						</ProtectedRoute>
 					}
 				/>
+
+				<Route
+					path="/profile/:id"
+					element={
+						<ProtectedRoute>
+							<Profile />
+						</ProtectedRoute>
+					}
+				/>
 			</Route>
 		</Routes>
 	);

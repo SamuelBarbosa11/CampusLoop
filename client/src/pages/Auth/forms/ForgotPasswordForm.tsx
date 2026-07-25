@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 
-import { useAuth } from "../../../auth";
-import { getAuthErrorMessage } from "../../../auth/auth.errors";
+import { useAuth } from "../../../hooks/useAuth";
+import { getAuthErrorMessage } from "../../../utils/auth.errors";
 
 import type { AuthMode } from "../types";
 
-import AuthInput from "../components/AuthInput";
-import AuthButton from "../components/AuthButton";
+import FormInput from "../../../components/form/FormInput";
+import FormButton from "../../../components/form/FormButton";
 
 import Text from "../../../components/Text";
 
@@ -81,18 +81,18 @@ export default function ForgotPasswordForm({
 						</Text>
 					)}
 
-					<AuthButton
+					<FormButton
 						type="button"
 						loading={loading}
 						onClick={() => void handleSubmit()}
 						disabled={cooldown > 0}
 					>
 						{cooldown > 0 ? `Reenviar em ${cooldown}s` : "Reenviar e-mail"}
-					</AuthButton>
+					</FormButton>
 				</>
 			) : (
 				<>
-					<AuthInput
+					<FormInput
 						label="E-mail"
 						type="email"
 						value={email}
@@ -106,9 +106,9 @@ export default function ForgotPasswordForm({
 						</Text>
 					)}
 
-					<AuthButton type="submit" loading={loading}>
+					<FormButton type="submit" loading={loading}>
 						Enviar e-mail
-					</AuthButton>
+					</FormButton>
 				</>
 			)}
 
@@ -116,7 +116,7 @@ export default function ForgotPasswordForm({
 				as="button"
 				type="button"
 				variant="muted"
-				className="text-(--secondary) transition-colors duration-200 hover:text-(--primary)"
+				className="text-(--secondary) transition-colors duration-200 hover:text-(--primary) hover:underline"
 				onClick={() => setMode("login")}
 			>
 				Voltar

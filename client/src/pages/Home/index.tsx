@@ -5,21 +5,36 @@ import PWA from "./sections/PWA";
 import Footer from "./sections/Footer";
 
 import { useIsDesktop } from "../../utils/useIsDesktop";
+import useIsInstalled from "../../utils/useIsInstalled";
 
 export default function Home() {
-  const isDesktop: boolean = useIsDesktop();
+	const isDesktop = useIsDesktop();
+  const isInstalled = useIsInstalled();
 
-  return (
-    <>
-      <HeroSection />
-      {isDesktop && <Impact />}
-      <News />
-      {isDesktop && (
-        <>
-          <PWA />
-          <Footer />
-        </>
-      )}
-    </>
-  );
+	return (
+		<div className="relative">
+			<div
+				id="blur"
+				className="
+          absolute
+          -top-100
+          -z-1
+          h-150
+          w-full
+          rounded-full
+          blur-3xl
+          bg-[radial-gradient(circle,rgba(194,159,255,0.18)_0%,rgba(194,159,255,0.18)_70%,transparent_100%)]
+        "
+			/>
+      {!isInstalled && <HeroSection />}
+			{isDesktop && <Impact />}
+			<News />
+			{isDesktop && (
+				<>
+					<PWA />
+					<Footer />
+				</>
+			)}
+		</div>
+	);
 }

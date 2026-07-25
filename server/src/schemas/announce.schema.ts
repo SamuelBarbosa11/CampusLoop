@@ -5,7 +5,7 @@ export const createAnnounceSchema = z.object({
 
 	title: z.string().trim().min(1, "Título é obrigatório."),
 
-	subtitle: z.string().trim().nullable().optional(),
+	description: z.string().trim().nullable().optional(),
 
 	category: z.string().trim().min(1, "Categoria é obrigatória."),
 

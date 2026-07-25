@@ -40,6 +40,16 @@ export async function findById(id: string) {
 	return announce;
 }
 
+export async function findByUserId(id: string) {
+	const announces = await announceRepository.findByUserId(id);
+
+	if (!announces) {
+		throw new AppError("Anúncios não encontrados.", 404);
+	}
+
+	return announces;
+}
+
 export async function create(userId: string, data: CreateAnnounceDTO) {
 	if (!data.donation && (data.price == null || data.price < 0)) {
 		throw new AppError("Preço inválido.");

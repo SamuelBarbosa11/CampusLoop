@@ -10,28 +10,29 @@ export const textVariants = {
 
 	description: "text-sm md:text-md lg:text-lg font-geist",
 
-	muted: "text-sm md:text-md lg:text-lg",
+	muted: "text-sm md:text-lg",
 
 	heading: "text-xs sm:text-sm md:text-base font-geist",
 
 	button: "text-base leading-[1.5rem]",
 
-	label: "text-xs leading-4",
+	label: "text-xs md:text-sm leading-4 tracking-wider",
 
 	pwa_card: "text-sm leading-[1.25rem]",
 
-	card_title: "text-xs md:text-sm lg:text-base font-semibold leading-[1.5rem]",
-	card_description: "text-xs font-semibold leading-[1rem]",
+	card_title: "text-xs md:text-xl font-semibold leading-[1.5rem]",
+	card_description: "text-xs md:text-base font-semibold leading-[1rem]",
+	card_category: "text-sm md:text-lg font-semibold tracking-wider",
 } as const;
 
-type TextVariant = keyof typeof textVariants;
+export type TextVariant = keyof typeof textVariants;
 
-type TextProps<T extends ElementType = "span"> = {
+export type TextProps<T extends ElementType = "span"> = {
 	as?: T;
 	variant?: TextVariant;
 	className?: string;
 	children?: ReactNode;
-} & Omit<ComponentPropsWithoutRef<T>, "as" | "className" | "children">;
+} & Omit<ComponentPropsWithoutRef<T>, "as" | "className" | "children" | "variant">;
 
 export default function Text<T extends ElementType = "span">({
 	as,

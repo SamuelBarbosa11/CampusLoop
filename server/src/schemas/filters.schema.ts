@@ -9,6 +9,6 @@ export const announceFiltersSchema = z.object({
 		.transform((value) => value === "true")
 		.optional(),
 	sort: z
-		.enum(["recent", "oldest", "price-asc", "price-desc"])
-		.default("recent"),
+		.enum(["recent", "price-asc", "price-desc", ""])
+		.default(""),
 });

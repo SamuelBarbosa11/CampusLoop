@@ -1,13 +1,13 @@
 import { useState } from "react";
 import type { ChangeEvent } from "react";
 
-import { useAuth } from "../../../auth";
-import { getAuthErrorMessage } from "../../../auth/auth.errors";
+import { useAuth } from "../../../hooks/useAuth";
+import { getAuthErrorMessage } from "../../../utils/auth.errors";
 
 import type { AuthMode } from "../types";
 
-import AuthInput from "../components/AuthInput";
-import AuthButton from "../components/AuthButton";
+import FormInput from "../../../components/form/FormInput";
+import FormButton from "../../../components/form/FormButton";
 
 import Text from "../../../components/Text";
 
@@ -74,7 +74,7 @@ export default function ResetPasswordForm({ setMode }: ResetPasswordFormProps) {
 				void handleSubmit();
 			}}
 		>
-			<AuthInput
+			<FormInput
 				label="Nova senha"
 				type="password"
 				name="password"
@@ -83,7 +83,7 @@ export default function ResetPasswordForm({ setMode }: ResetPasswordFormProps) {
 				required
 			/>
 
-			<AuthInput
+			<FormInput
 				label="Confirmar senha"
 				type="password"
 				name="confirmPassword"
@@ -98,9 +98,9 @@ export default function ResetPasswordForm({ setMode }: ResetPasswordFormProps) {
 				</Text>
 			)}
 
-			<AuthButton type="submit" loading={loading}>
+			<FormButton type="submit" loading={loading}>
 				Salvar senha
-			</AuthButton>
+			</FormButton>
 		</form>
 	);
 }

@@ -11,6 +11,8 @@ const router = Router();
 
 router.get("/", authenticate, profileController.getMe);
 
+router.get("/:id", profileController.getById);
+
 router.patch(
 	"/",
 	authenticate,

@@ -19,12 +19,6 @@ body {
 	/* border: 1px solid red; */
 }
 
-.no-focus-outline {
-	&:focus {
-		outline: none;
-	}
-}
-
 :root {
 	--background: var(--woodsmoke);
 	--navbar: #0a0a0eb3;
@@ -47,7 +41,6 @@ body {
 	--manatae: #8e8e98;
 
 	--light: #f1f1f5;
-	--traced: #28282f;
 	--dark-purple: #8945ff7a;
 
 	--bg-button: var(--mauve);
@@ -72,4 +65,14 @@ body {
 
 ::-webkit-scrollbar-track {
 	background: transparent;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
+}
+
+textarea {
+	resize: none;
 }

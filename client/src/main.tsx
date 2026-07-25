@@ -4,12 +4,16 @@ import { BrowserRouter } from "react-router";
 import "./styles/index.css";
 
 import App from "./App.tsx";
-import AuthProvider from "./auth/AuthProvider.tsx";
+
+import AuthProvider from "./context/AuthProvider.tsx";
+import ToastProvider from "./context/ToastProvider.tsx";
 
 createRoot(document.getElementById("root")!).render(
 	<BrowserRouter>
 		<AuthProvider>
-			<App />
+			<ToastProvider>
+				<App />
+			</ToastProvider>
 		</AuthProvider>
 	</BrowserRouter>
 );

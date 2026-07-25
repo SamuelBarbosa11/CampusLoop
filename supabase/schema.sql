@@ -12,7 +12,7 @@ create table announces (
     user_id uuid not null references profiles(id) on delete cascade,
     image_url text not null,
     title text not null,
-    subtitle text,
+    description text,
     category text not null,
     price numeric check(price >= 0),
     donation boolean not null,
