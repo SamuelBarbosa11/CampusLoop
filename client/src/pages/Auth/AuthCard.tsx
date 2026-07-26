@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 
 import Text from "../../components/text/Text";
-import favicon from "../../assets/favicon.png";
+import favicon from "../../assets/favicon.svg";
 
 interface AuthCardProps {
 	title: string;

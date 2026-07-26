@@ -1,5 +1,6 @@
 import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router";
+import { registerSW } from "virtual:pwa-register";
 
 import "./styles/index.css";
 
@@ -17,3 +18,7 @@ createRoot(document.getElementById("root")!).render(
 		</AuthProvider>
 	</BrowserRouter>
 );
+
+registerSW({
+	immediate: true,
+});

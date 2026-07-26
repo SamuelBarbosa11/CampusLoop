@@ -1,7 +1,7 @@
 import clsx from "clsx";
 
 import Text from "../text/Text";
-import logo from "../../assets/favicon.png";
+import logo from "../../assets/favicon.svg";
 
 import { useIsDesktop } from "../../hooks/useIsDesktop";
 import useIsInstalled from "../../hooks/useIsInstalled";

@@ -100,7 +100,7 @@ export default function News() {
 							) : (
 								<EmptyState
 									title="Nenhum anúncio encontrado"
-									subtitle="Tente alterar os filtros"
+									subtitle={isDesktop ? "Tente alterar os filtros" : ""}
 								/>
 							)}{" "}
 						</>

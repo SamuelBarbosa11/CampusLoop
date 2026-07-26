@@ -256,7 +256,7 @@ export default function Profile() {
 											</li>
 										))
 									) : (
-										<EmptyState subtitle="Você ainda não publicou nenhum anúncio" />
+										<EmptyState subtitle={isOwner ? "Você ainda não publicou nenhum anúncio.":"Esse usuário não publicou nenhum anúncio."} />
 									)}
 								</>
 							)}
