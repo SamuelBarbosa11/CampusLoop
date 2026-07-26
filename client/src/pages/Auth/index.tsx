@@ -42,7 +42,7 @@ export default function Auth() {
 
 	const legends = {
 		login: {
-			title: "Bem-vindo ao Loopus",
+			title: "Bem-vindo ao CampusLoop",
 			subtitle: "Entre com seu nome do campus para continuar.",
 		},
 

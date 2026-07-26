@@ -1,20 +1,22 @@
 import { useEffect, useState } from "react";
+import clsx from "clsx";
 
 import Text from "../../../components/text/Text";
 import Card from "../../../components/cards/Card";
 import Filters from "../../../components/search/Filters";
 import EmptyState from "../../../components/smalls/EmptyState";
+import Spinner from "../../../components/smalls/Spinner";
 
 import { useFilters } from "../../../hooks/useFilters";
 import { useAnnounces } from "../../../hooks/api/useAnnounces";
-
 import { useIsDesktop } from "../../../hooks/useIsDesktop";
+import useIsInstalled from "../../../hooks/useIsInstalled";
 
 import type { Announce } from "../../../types/announce.types";
-import Spinner from "../../../components/smalls/Spinner";
 
 export default function News() {
 	const isDesktop = useIsDesktop();
+	const isInstalled = useIsInstalled();
 
 	const { findAll, loadingAnnounces } = useAnnounces();
 
@@ -83,7 +85,10 @@ export default function News() {
 				</header>
 			)}
 
-			<div id="carrossel-cards" className="md:overflow-x-auto py-6">
+			<div
+				id="carrossel-cards"
+				className={clsx("md:overflow-x-auto py-6", isInstalled && "mt-24")}
+			>
 				<ul className="flex flex-wrap justify-center md:justify-start md:flex-nowrap gap-6 md:px-3">
 					{loadingAnnounces ? (
 						<div className="w-full min-h-screen flex justify-center items-center">

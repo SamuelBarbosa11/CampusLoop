@@ -13,9 +13,10 @@ export default function Home() {
 
 	return (
 		<div className="relative">
-			<div
-				id="blur"
-				className="
+			{!isInstalled && (
+				<div
+					id="blur"
+					className="
           absolute
           -top-100
           -z-1
@@ -25,7 +26,9 @@ export default function Home() {
           blur-3xl
           bg-[radial-gradient(circle,rgba(194,159,255,0.18)_0%,rgba(194,159,255,0.18)_70%,transparent_100%)]
         "
-			/>
+				/>
+			)}
+
 			{!isInstalled && <HeroSection />}
 			{isDesktop && <Impact />}
 			<News />
