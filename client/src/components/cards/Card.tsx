@@ -44,8 +44,8 @@ export default function Card({
 			className={clsx(
 				"shrink-0 bg-(--woodsmoke) rounded-3xl",
 				keepStyle
-					? "w-72 min-h-112 border border-(--shark)"
-					: "w-full md:w-72 md:min-h-112 md:border md:border-(--shark)",
+					? "w-72 min-h-120 border border-(--shark)"
+					: "w-full md:w-72 md:min-h-120 md:border md:border-(--shark)",
 				clickable &&
 					"group transition duration-200 hover:border-(--dark-purple) md:hover:z-1 md:hover:scale-105 md:hover:animate-[bouncing_3s_ease-in-out_infinite]",
 				className
@@ -56,7 +56,7 @@ export default function Card({
 					src={item.image_url}
 					alt={item.title}
 					className={clsx(
-						"aspect-square rounded-t-3xl object-cover ",
+						"aspect-square rounded-t-3xl object-contain",
 						keepStyle ? "w-72 max-h-72" : "w-full md:w-72 md:max-h-72"
 					)}
 				/>
@@ -89,7 +89,7 @@ export default function Card({
 								</Text>
 							</div>
 						) : (
-							<Text variant="card_title" className="text-(--mauve) text-end">
+							<Text variant="card_title" className="text-(--mauve)">
 								{`R$ ${item.price}`}
 							</Text>
 						)}

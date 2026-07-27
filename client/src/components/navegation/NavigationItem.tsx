@@ -1,4 +1,3 @@
-import type { CSSProperties } from "react";
 import type { IconType } from "react-icons";
 import clsx from "clsx";
 
@@ -6,7 +5,7 @@ import Text from "../text/Text";
 
 import { useNavigate } from "react-router";
 
-type NavLinkIconProps =
+type NavigationItemIconProps =
 	| {
 			icon: IconType;
 			image?: never;
@@ -16,28 +15,28 @@ type NavLinkIconProps =
 			image: string;
 	  };
 
-type NavLinkProps = NavLinkIconProps & {
+type NavigationItemProps = NavigationItemIconProps & {
 	label?: string;
 	tag?: string;
 
 	size?: number | string;
-	color?: CSSProperties["color"];
 
 	className?: string;
 };
 
-export default function NavLink(props: NavLinkProps) {
+export default function NavigationItem(
+	props: NavigationItemProps
+) {
 	const navigate = useNavigate();
 
-	const {
-		label = "",
-		tag = "",
-		size = "1rem",
-		color = "white",
-		className = "",
-	} = props;
+	const { label = "", tag = "", size = "1rem", className = "" } = props;
 
 	const iconSize = typeof size === "number" ? `${size}px` : size;
+
+	const path = tag ? `/${tag}` : "/";
+
+	const active = location.pathname === path;
+	const iconColor = active ? "var(--dark-purple)" : "white";
 
 	let content;
 
@@ -45,7 +44,7 @@ export default function NavLink(props: NavLinkProps) {
 		const Icon = props.icon;
 		content = (
 			<div className="bg-clip-content bg-transparent">
-				<Icon size={iconSize} color={color} />
+				<Icon size={iconSize} color={iconColor} />
 			</div>
 		);
 	} else {

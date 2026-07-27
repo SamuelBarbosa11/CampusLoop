@@ -16,13 +16,27 @@ import { IoCamera } from "react-icons/io5";
 import { TbBrandWhatsapp } from "react-icons/tb";
 
 import { useAuth } from "../hooks/useAuth";
-import { useAnnounces } from "../hooks/api/useAnnounces";
 import { useProfiles } from "../hooks/api/useProfiles";
 import { useUpload } from "../hooks/api/useUpload";
 import { useIsDesktop } from "../hooks/useIsDesktop";
+import useCachedResource from "../hooks/useCachedResource";
+import useOnlineStatus from "../hooks/useOnlineStatus";
+
+import { getMyProfile, getProfileById } from "../services/profile.service";
+import {
+	getAnnouncesByUserId,
+	getMyAnnounces,
+} from "../services/announce.service";
+import { toast } from "../services/toast";
 
 import { formatTelephone } from "../utils/formatTelephone";
 import openWhatsapp from "../utils/openWhatsapp";
+import {
+	getAnnouncesPublicProfileCacheKey,
+	getMyAnnouncesCacheKey,
+	getMyProfileCacheKey,
+	getPublicProfileCacheKey,
+} from "../utils/buildCacheKeys";
 
 import type { Announce } from "../types/announce.types";
 import type { Profile, UpdateProfileDTO } from "../types/profile.types";
@@ -35,18 +49,17 @@ export default function Profile() {
 	const viewedProfileId = id ?? myProfile?.id;
 	const isOwner = viewedProfileId === myProfile?.id;
 
-	const { findByUserId, loadingAnnounces } = useAnnounces();
-	const { findById, update } = useProfiles();
+	const { update } = useProfiles();
 	const { upload, loadingUpload } = useUpload();
 
 	const [announces, setAnnounces] = useState<Announce[]>([]);
 	const [editMode, setEditMode] = useState(false);
 	const [loadingChanges, setLoadingChanges] = useState(false);
-	const [loadingData, setLoadingData] = useState(true);
 
 	const inputRef = useRef<HTMLInputElement>(null);
 
 	const isDesktop = useIsDesktop();
+	const isOnline = useOnlineStatus();
 
 	function toggleEditMode() {
 		setEditMode((prev) => !prev);
@@ -70,6 +83,50 @@ export default function Profile() {
 		});
 	}
 
+	const myProfileResource = useCachedResource({
+		cacheKey: getMyProfileCacheKey(),
+
+		request: getMyProfile,
+
+		params: [],
+
+		onData: (profile) => {
+			setViewedProfile(profile);
+		},
+	});
+
+	const publicProfileResource = useCachedResource({
+		cacheKey: getPublicProfileCacheKey(viewedProfileId ?? ""),
+
+		request: getProfileById,
+
+		params: [viewedProfileId ?? ""],
+
+		onData: (profile) => {
+			setViewedProfile(profile);
+		},
+	});
+
+	const myAnnouncesResource = useCachedResource({
+		cacheKey: getMyAnnouncesCacheKey(),
+
+		request: getMyAnnounces,
+
+		params: [],
+
+		onData: setAnnounces,
+	});
+
+	const publicAnnouncesResource = useCachedResource({
+		cacheKey: getAnnouncesPublicProfileCacheKey(viewedProfileId ?? ""),
+
+		request: getAnnouncesByUserId,
+
+		params: [viewedProfileId ?? ""],
+
+		onData: setAnnounces,
+	});
+
 	useEffect(() => {
 		if (!viewedProfile) return;
 
@@ -84,24 +141,21 @@ export default function Profile() {
 	useEffect(() => {
 		if (!viewedProfileId) return;
 
-		async function loadData(viewedProfileId: string) {
-			try {
-				setLoadingData(true);
-
-				await findById(viewedProfileId)
-					.then(setViewedProfile)
-					.catch(console.error);
-
-				await findByUserId(viewedProfileId)
-					.then(setAnnounces)
-					.catch(console.error);
-			} finally {
-				setLoadingData(false);
-			}
+		if (isOwner) {
+			myProfileResource.load();
+			myAnnouncesResource.load();
+			return;
 		}
 
-		loadData(viewedProfileId);
-	}, [viewedProfileId]);
+		publicProfileResource.load();
+		publicAnnouncesResource.load();
+	}, [viewedProfileId, isOwner]);
+
+	const loading =
+		myProfileResource.isLoading ||
+		publicProfileResource.isLoading ||
+		myAnnouncesResource.isLoading ||
+		publicAnnouncesResource.isLoading;
 
 	function handleChange(event: ChangeEvent<HTMLInputElement>) {
 		const { name, value } = event.target;
@@ -117,6 +171,11 @@ export default function Profile() {
 
 		if (!file) return;
 
+		if (!isOnline) {
+			toast.error("Conecte-se à internet para fazer upload de fotos.");
+			return;
+		}
+
 		const imageUrl = await upload(file);
 
 		setFormData((previous) => ({
@@ -128,6 +187,11 @@ export default function Profile() {
 	async function saveChanges() {
 		try {
 			setLoadingChanges(true);
+
+			if (!isOnline) {
+				toast.error("Conecte-se à internet para atualizar seu perfil.");
+				return;
+			}
 
 			await update({
 				name: formData.name,
@@ -159,13 +223,13 @@ export default function Profile() {
 						<ButtonBackTo className="fixed top-18 left-4 bg-(--background)" />
 					)}
 
-					{!loadingData ? (
-						<header className="flex flex-col items-center px-2 md:px-4">
+					{!loading ? (
+						<header className="flex flex-col items-center border-b border-(--shark) pb-8 md:pb-12 px-2 md:px-4">
 							{isOwner && (
-								<ExitButtom className="border border-(--shark) rounded-2xl px-4 py-2 ml-auto" />
+								<ExitButtom className="border border-(--shark) rounded-2xl px-4 py-2 ml-auto cursor-pointer" />
 							)}
 
-							<div className="w-full min-h-40 sm:min-h-32 flex mt-4 md:mt-12 gap-4 sm:gap-8 md:gap-12">
+							<div className="w-full flex mt-4 md:mt-12 gap-4 sm:gap-8 md:gap-12">
 								<div id="profile-photo" className="my-auto shrink-0">
 									{formData.photo_url ? (
 										<img
@@ -177,7 +241,7 @@ export default function Profile() {
 									)}
 								</div>
 
-								<div id="infos" className="flex flex-col justify-between">
+								<div id="infos" className="flex flex-col gap-4">
 									<Text variant="title">{formData.name}</Text>
 
 									{formData.biography ? (
@@ -243,7 +307,7 @@ export default function Profile() {
 						className="mt-8 md:mt-12 w-full flex justify-center"
 					>
 						<ul className="flex md:flex-wrap overflow-x-auto justify-start md:justify-center gap-6 px-3">
-							{loadingAnnounces ? (
+							{loading ? (
 								<div className="w-full min-h-screen flex justify-center items-center">
 									<Spinner />
 								</div>
@@ -256,7 +320,13 @@ export default function Profile() {
 											</li>
 										))
 									) : (
-										<EmptyState subtitle={isOwner ? "Você ainda não publicou nenhum anúncio.":"Esse usuário não publicou nenhum anúncio."} />
+										<EmptyState
+											subtitle={
+												isOwner
+													? "Você ainda não publicou nenhum anúncio."
+													: "Esse usuário não publicou nenhum anúncio."
+											}
+										/>
 									)}
 								</>
 							)}

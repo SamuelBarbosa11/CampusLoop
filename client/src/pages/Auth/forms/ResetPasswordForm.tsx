@@ -1,15 +1,18 @@
-import { useState } from "react";
-import type { ChangeEvent } from "react";
+import { useState, type ChangeEvent } from "react";
+import { useNavigate } from "react-router";
 
-import { useAuth } from "../../../hooks/useAuth";
-import { getAuthErrorMessage } from "../../../utils/auth.errors";
-
-import type { AuthMode } from "../types";
-
+import Text from "../../../components/text/Text";
 import FormInput from "../../../components/form/FormInput";
 import FormButton from "../../../components/form/FormButton";
 
-import Text from "../../../components/text/Text";
+import { useAuth } from "../../../hooks/useAuth";
+import useOnlineStatus from "../../../hooks/useOnlineStatus";
+
+import { toast } from "../../../services/toast";
+
+import { getAuthErrorMessage } from "../../../utils/auth.errors";
+
+import type { AuthMode } from "../types";
 
 interface ResetPasswordData {
 	password: string;
@@ -21,10 +24,15 @@ interface ResetPasswordFormProps {
 }
 
 export default function ResetPasswordForm({ setMode }: ResetPasswordFormProps) {
-	const { resetPassword, logout } = useAuth();
+	const navigate = useNavigate();
 
+	const { resetPassword, logout, finishPasswordRecovery } = useAuth();
+
+	const [submitted, setSubmitted] = useState(false);
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState("");
+
+	const isOnline = useOnlineStatus();
 
 	const [formData, setFormData] = useState<ResetPasswordData>({
 		password: "",
@@ -43,9 +51,15 @@ export default function ResetPasswordForm({ setMode }: ResetPasswordFormProps) {
 	async function handleSubmit() {
 		try {
 			setLoading(true);
+			setSubmitted(true);
 
 			if (formData.password !== formData.confirmPassword) {
 				setError("As senhas devem ser iguais!");
+				return;
+			}
+
+			if (!isOnline) {
+				toast.error("Verifique sua conexão com a internet e tente novamente.");
 				return;
 			}
 
@@ -54,13 +68,20 @@ export default function ResetPasswordForm({ setMode }: ResetPasswordFormProps) {
 				confirmPassword: formData.confirmPassword,
 			});
 
+			finishPasswordRecovery();
+
 			await logout();
 
-			alert("Senha alterada com sucesso.");
+			toast.success("Senha alterada com sucesso.");
 
 			setMode("login");
+
+			navigate("/auth?mode=login", {
+				replace: true,
+			});
 		} catch (error) {
 			setError(getAuthErrorMessage(error));
+			console.log(error);
 		} finally {
 			setLoading(false);
 		}
@@ -80,6 +101,8 @@ export default function ResetPasswordForm({ setMode }: ResetPasswordFormProps) {
 				name="password"
 				value={formData.password}
 				onChange={handleChange}
+				viewEye
+				invalid={submitted && !formData.password}
 				required
 			/>
 
@@ -89,6 +112,12 @@ export default function ResetPasswordForm({ setMode }: ResetPasswordFormProps) {
 				name="confirmPassword"
 				value={formData.confirmPassword}
 				onChange={handleChange}
+				viewEye
+				invalid={
+					submitted &&
+					(!formData.confirmPassword ||
+						formData.password !== formData.confirmPassword)
+				}
 				required
 			/>
 

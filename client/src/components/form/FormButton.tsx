@@ -27,7 +27,7 @@ export default function FormButton({
 			{...props}
 			disabled={loading || props.disabled}
 			className={clsx(
-				"rounded-xl font-semibold transition duration-300 px-4 py-3 hover:scale-102 disabled:cursor-not-allowed disabled:opacity-50",
+				"rounded-xl font-semibold transition duration-300 px-4 py-3 cursor-pointer hover:scale-102 disabled:cursor-not-allowed disabled:opacity-50",
 				className
 			)}
 			style={{ backgroundColor, color }}

@@ -27,7 +27,11 @@ export async function getByUserId(req: Request<Params>, res: Response) {
 }
 
 export async function getMine(req: Request, res: Response) {
-	const announces = await announceService.findByUserId(req.user.id);
+	const filters = announceFiltersSchema.parse(req.query);
+
+	filters.user_id = req.user.id;
+
+	const announces = await announceService.findAll(filters);
 
 	res.json(announces);
 }

@@ -3,7 +3,9 @@ import { useNavigate } from "react-router";
 
 import { useUpload } from "./api/useUpload";
 import { useAnnounces } from "./api/useAnnounces";
-import { useToast } from "./useToast";
+import useOnlineStatus from "./useOnlineStatus";
+
+import { toast } from "../services/toast";
 
 export interface AnnounceForm {
 	title: string;
@@ -28,6 +30,8 @@ const INITIAL_FORM: AnnounceForm = {
 export function useAnnounceForm() {
 	const navigate = useNavigate();
 
+	const isOnline = useOnlineStatus();
+
 	const { upload } = useUpload();
 	const { create } = useAnnounces();
 
@@ -36,8 +40,6 @@ export function useAnnounceForm() {
 	const [loading, setLoading] = useState(false);
 
 	const [messageError, setMessageError] = useState("");
-
-	const toast = useToast();
 
 	function update<K extends keyof AnnounceForm>(
 		field: K,
@@ -57,6 +59,11 @@ export function useAnnounceForm() {
 			if (!form.photo) {
 				toast.error("Selecione uma imagem.");
 				throw new Error("Selecione uma imagem.");
+			}
+
+			if (!isOnline) {
+				toast.error("Conecte-se à internet para atualizar seu perfil.");
+				return;
 			}
 
 			const imageUrl = await upload(form.photo);

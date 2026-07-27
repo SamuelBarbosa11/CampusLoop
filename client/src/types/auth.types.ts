@@ -30,6 +30,7 @@ export interface AuthContextData {
 	profile: Profile | null;
 	isAuthenticated: boolean;
 	isRecoveringPassword: boolean;
+	finishPasswordRecovery: () => void;
 	loading: boolean;
 	login(data: LoginDTO): Promise<void>;
 	register(data: RegisterDTO): Promise<void>;

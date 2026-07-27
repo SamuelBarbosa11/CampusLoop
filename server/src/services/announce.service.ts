@@ -43,10 +43,6 @@ export async function findById(id: string) {
 export async function findByUserId(id: string) {
 	const announces = await announceRepository.findByUserId(id);
 
-	if (!announces) {
-		throw new AppError("Anúncios não encontrados.", 404);
-	}
-
 	return announces;
 }
 

@@ -1,14 +1,18 @@
 import { useState, useEffect } from "react";
 
-import { useAuth } from "../../../hooks/useAuth";
-import { getAuthErrorMessage } from "../../../utils/auth.errors";
-
-import type { AuthMode } from "../types";
-
+import Text from "../../../components/text/Text";
 import FormInput from "../../../components/form/FormInput";
 import FormButton from "../../../components/form/FormButton";
 
-import Text from "../../../components/text/Text";
+import { useAuth } from "../../../hooks/useAuth";
+import useOnlineStatus from "../../../hooks/useOnlineStatus";
+
+import { toast } from "../../../services/toast";
+
+import { getAuthErrorMessage } from "../../../utils/auth.errors";
+
+import type { AuthMode } from "../types";
+import { validateEmail } from "../../../utils/validators";
 
 interface ForgotPasswordFormProps {
 	setMode: (mode: AuthMode) => void;
@@ -19,18 +23,34 @@ export default function ForgotPasswordForm({
 }: ForgotPasswordFormProps) {
 	const { forgotPassword } = useAuth();
 
+	const [submitted, setSubmitted] = useState(false);
 	const [loading, setLoading] = useState(false);
-
-	const [emailSent, setEmailSent] = useState(false);
 	const [error, setError] = useState("");
+
+	const [email, setEmail] = useState("");
+	const [emailSent, setEmailSent] = useState(false);
 
 	const [cooldown, setCooldown] = useState(0);
 
-	const [email, setEmail] = useState("");
+	const isOnline = useOnlineStatus();
 
 	async function handleSubmit() {
 		try {
 			setLoading(true);
+			setSubmitted(true);
+
+			// Validação de Email
+			const emailError = validateEmail(email);
+
+			if (emailError) {
+				setError(emailError);
+				return;
+			}
+
+			if (!isOnline) {
+				toast.error("Verifique sua conexão com a internet e tente novamente.");
+				return;
+			}
 
 			await forgotPassword({ email });
 
@@ -97,6 +117,7 @@ export default function ForgotPasswordForm({
 						type="email"
 						value={email}
 						onChange={(event) => setEmail(event.target.value)}
+						invalid={submitted && Boolean(validateEmail(email))}
 						required
 					/>
 

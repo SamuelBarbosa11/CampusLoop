@@ -1,6 +1,6 @@
 import { useAuth } from "../../hooks/useAuth";
 
-import NavLink from "./NavLink";
+import NavigationItem from "./NavigationItem";
 
 import { CgProfile } from "react-icons/cg";
 
@@ -10,7 +10,7 @@ export default function ProfileIcon() {
 	const size = profilePhoto ? "1.75rem" : "1.5rem";
 
 	return (
-		<NavLink
+		<NavigationItem
 			tag="profile"
 			size={size}
 			{...(profilePhoto ? { image: profilePhoto } : { icon: CgProfile })}

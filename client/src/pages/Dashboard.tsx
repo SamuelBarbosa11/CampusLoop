@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router";
 
 import ButtonBackTo from "../components/navegation/ButtonBackTo";
@@ -7,14 +7,19 @@ import MyAnnounceCard from "../components/cards/MyAnnounceCard";
 import Filters from "../components/search/Filters";
 import EmptyState from "../components/smalls/EmptyState";
 import Spinner from "../components/smalls/Spinner";
-
 import { IoIosAdd } from "react-icons/io";
 
-import { useFilters } from "../hooks/useFilters";
+import useCachedResource from "../hooks/useCachedResource";
+import useOnlineStatus from "../hooks/useOnlineStatus";
 import { useAnnounces } from "../hooks/api/useAnnounces";
-
+import { useFilters } from "../hooks/useFilters";
 import { useDebounce } from "../hooks/useDebounce";
 import { useIsDesktop } from "../hooks/useIsDesktop";
+
+import { getMyAnnounces } from "../services/announce.service";
+import { toast } from "../services/toast";
+
+import { getMyAnnouncesCacheKey } from "../utils/buildCacheKeys";
 
 import type { Announce } from "../types/announce.types";
 
@@ -22,13 +27,23 @@ export default function Dashboard() {
 	const navigate = useNavigate();
 
 	const isDesktop = useIsDesktop();
+	const isOnline = useOnlineStatus();
 
-	const { findMine, remove, loadingAnnounces } = useAnnounces();
-	const filters = useFilters();
+	const { remove } = useAnnounces();
 
 	const [announces, setAnnounces] = useState<Announce[]>([]);
 
+	const filters = useFilters();
 	const debouncedSearch = useDebounce(filters.search, 500);
+	const filtersData = useMemo(
+		() => ({
+			category: filters.category,
+			donation: filters.donation,
+			search: debouncedSearch,
+			sort: filters.sort,
+		}),
+		[filters.category, filters.donation, debouncedSearch, filters.sort]
+	);
 
 	const categories = [
 		"Todos",
@@ -50,19 +65,27 @@ export default function Dashboard() {
 		},
 	];
 
+	const { load, isLoading } = useCachedResource({
+		cacheKey: getMyAnnouncesCacheKey(filtersData),
+
+		request: getMyAnnounces,
+
+		params: [filtersData],
+
+		onData: setAnnounces,
+	});
+
 	useEffect(() => {
-		findMine({
-			category: filters.category,
-			donation: filters.donation,
-			search: debouncedSearch,
-			sort: filters.sort,
-		})
-			.then(setAnnounces)
-			.catch(console.error);
-	}, [filters.category, filters.donation, debouncedSearch, filters.sort]);
+		load();
+	}, [load]);
 
 	async function handleDelete(announce: Announce) {
 		if (!window.confirm(`Deseja excluir o anúncio "${announce.title}"?`)) {
+			return;
+		}
+
+		if (!isOnline) {
+			toast.error("Conecte-se à internet para excluir um anúncio.");
 			return;
 		}
 
@@ -77,7 +100,7 @@ export default function Dashboard() {
 		<section id="dashboard" className="w-full min-h-screen mt-30">
 			<header className="flex justify-between items-center mb-8">
 				<div className="flex w-full items-center gap-4">
-					{isDesktop && <ButtonBackTo />}
+					{isDesktop && <ButtonBackTo tag="/" />}
 					<Text variant="subtitle" className="w-full text-center md:text-start">
 						Meus Anúncios
 					</Text>
@@ -99,12 +122,12 @@ export default function Dashboard() {
 			<div id="filters" className="w-full max-h-max flex flex-col gap-2">
 				<Filters
 					search={filters.search}
-					onSearchChange={filters.setSearch}
 					categories={categories}
 					sorts={orders}
 					category={filters.category}
 					donation={filters.donation}
 					sort={filters.sort}
+					onSearchChange={filters.setSearch}
 					onCategoryChange={filters.selectCategory}
 					onDonationToggle={filters.toggleDonation}
 					onSortChange={filters.selectSort}
@@ -113,7 +136,7 @@ export default function Dashboard() {
 
 			<div id="cards" className="mt-6 px-8 pb-24">
 				<ul className="flex flex-wrap justify-center gap-4 md:gap-6">
-					{loadingAnnounces ? (
+					{isLoading ? (
 						<div className="w-full min-h-screen flex justify-center items-center">
 							<Spinner />
 						</div>

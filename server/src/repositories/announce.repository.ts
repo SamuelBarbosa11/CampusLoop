@@ -41,11 +41,11 @@ export async function findAll(filters: AnnounceFilters) {
 			break;
 
 		case "price-asc":
-			query = query.order("price", { ascending: true });
+			query = query.order("price", { ascending: true, nullsFirst: true });
 			break;
 
 		case "price-desc":
-			query = query.order("price", { ascending: false });
+			query = query.order("price", { ascending: false, nullsFirst: false });
 			break;
 
 		default:
@@ -74,14 +74,16 @@ export async function findById(id: string) {
 export async function findByUserId(userId: string) {
 	const { data, error } = await supabase
 		.from("announces")
-		.select(`
+		.select(
+			`
 			*,
 			user:profiles(
 				id,
 				name,
 				photo_url
 			)
-		`)
+		`
+		)
 		.eq("user_id", userId)
 		.order("created_at", { ascending: false });
 

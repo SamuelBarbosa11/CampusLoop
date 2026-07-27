@@ -74,14 +74,6 @@ export default function AuthProvider({ children }: AuthProviderProps) {
 					setIsRecoveringPassword(true);
 					break;
 
-				case "USER_UPDATED":
-					setIsRecoveringPassword(false);
-					break;
-
-				case "SIGNED_OUT":
-					setIsRecoveringPassword(false);
-					break;
-
 				case "SIGNED_IN":
 					// Apenas um login normal limpa o estado.
 					if (!isRecoveringPassword) {
@@ -94,7 +86,7 @@ export default function AuthProvider({ children }: AuthProviderProps) {
 		return () => {
 			subscription.unsubscribe();
 		};
-	}, [isRecoveringPassword]);
+	}, []);
 
 	async function loadProfile(userId: string) {
 		const { data, error } = await supabase
@@ -137,6 +129,10 @@ export default function AuthProvider({ children }: AuthProviderProps) {
 		await authService.resetPassword(data);
 	};
 
+	function finishPasswordRecovery() {
+		setIsRecoveringPassword(false);
+	}
+
 	const value = {
 		user,
 		profile,
@@ -149,6 +145,7 @@ export default function AuthProvider({ children }: AuthProviderProps) {
 		forgotPassword,
 		resetPassword,
 		isRecoveringPassword,
+		finishPasswordRecovery,
 		refreshProfile,
 	};
 

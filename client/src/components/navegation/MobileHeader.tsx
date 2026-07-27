@@ -19,7 +19,7 @@ export default function MobileHeader() {
 	const { canInstall, install } = useInstallPrompt();
 
 	return (
-		<div className="fixed bg-(--navbar) backdrop-blur-md top-0 p-4 w-full flex justify-between items-center">
+		<div className="absolute top-0 bg-(--navbar) backdrop-blur-md p-4 w-screen flex justify-between items-center z-100">
 			<Logo />
 
 			{!isInstalled && canInstall && (

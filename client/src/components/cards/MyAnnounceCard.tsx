@@ -52,7 +52,7 @@ export default function MyAnnounceCard({
 
 						<Text
 							variant="card_description"
-							className="text-(--secondary) line-clamp-2"
+							className="text-(--secondary) line-clamp-2 pb-1"
 						>
 							{item.description}
 						</Text>

@@ -1,6 +1,6 @@
 import validateToken from "./validateToken";
 
-import { showError } from "./toast.service";
+import { toast } from "./toast";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -32,7 +32,7 @@ export async function api<T>(
 		const error = await response.json();
 
 		if (response.status >= 500) {
-			showError("Falha temporária. Verifique sua conexão e tente novamente.");
+			toast.error("Falha temporária. Verifique sua conexão e tente novamente.");
 		}
 
 		throw new Error(error.error);

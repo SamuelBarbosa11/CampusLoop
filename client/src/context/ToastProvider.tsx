@@ -4,79 +4,109 @@ import type { ReactNode } from "react";
 
 import Toast from "../components/smalls/Toast";
 
-import { ToastContext, type ToastState } from "./ToastContext";
+import {
+	ToastContext,
+	type ToastOptions,
+	type ToastState,
+} from "./ToastContext";
 
-import { registerToasts } from "../services/toast.service";
+import { registerToasts } from "../services/toast";
 
 interface Props {
 	children: ReactNode;
 }
 
-const initialState: ToastState = {
-	message: "",
-	type: "success",
-	visible: false,
-};
-
 export default function ToastProvider({ children }: Props) {
-	const [state, setState] = useState(initialState);
+	const [toasts, setToasts] = useState<ToastState[]>([]);
 
-	const timeoutRef = useRef<number>(0);
+	const timeouts = useRef(new Map<string, number>());
+	const removeTimeouts = useRef(new Map<string, number>());
 
-	function show(type: ToastState["type"], message: string) {
-		clearTimeout(timeoutRef.current);
+	function show(options: ToastOptions) {
+		const newId = crypto.randomUUID();
 
-		setState({
-			type,
-			message,
+		const newToast: ToastState = {
+			id: newId,
+			type: options.type,
+			message: options.message,
 			visible: true,
-		});
+		};
 
-		timeoutRef.current = window.setTimeout(() => {
-			hide();
-		}, 5000);
+		setToasts((previous) => [newToast, ...previous]);
+
+		const duration = options.duration ?? 5000;
+
+		if (duration > 0) {
+			const timeout = window.setTimeout(() => {
+				hide(newId);
+			}, duration);
+
+			timeouts.current.set(newId, timeout);
+		}
+
+		return newId;
 	}
 
-	function hide() {
-		clearTimeout(timeoutRef.current);
+	function hide(id: string) {
+		// impede chamar hide duas vezes
+		if (removeTimeouts.current.has(id)) {
+			return;
+		}
 
-		setState((prev) => ({
-			...prev,
-			visible: false,
-		}));
+		const timeout = timeouts.current.get(id);
+
+		if (timeout) {
+			clearTimeout(timeout);
+			timeouts.current.delete(id);
+		}
+
+		setToasts((previous) =>
+			previous.map((toast) =>
+				toast.id === id ? { ...toast, visible: false } : toast
+			)
+		);
+
+		const removeTimeout = window.setTimeout(() => {
+			setToasts((previous) => previous.filter((t) => t.id !== id));
+
+			removeTimeouts.current.delete(id);
+		}, 300);
+
+		removeTimeouts.current.set(id, removeTimeout);
 	}
 
 	useEffect(() => {
-		return () => clearTimeout(timeoutRef.current);
+		return () => {
+			timeouts.current.forEach(clearTimeout);
+			removeTimeouts.current.forEach(clearTimeout);
+
+			timeouts.current.clear();
+			removeTimeouts.current.clear();
+		};
 	}, []);
 
 	useEffect(() => {
 		registerToasts({
-			success: (message) => show("success", message),
-
-			error: (message) => show("error", message),
-
-			info: (message) => show("info", message),
+			show,
+			hide,
 		});
 	}, []);
 
 	return (
 		<ToastContext.Provider
 			value={{
-				state,
-
-				success: (message) => show("success", message),
-
-				error: (message) => show("error", message),
-
-				info: (message) => show("info", message),
-
+				toasts,
+				show,
 				hide,
 			}}
 		>
 			{children}
 
-			<Toast {...state} />
+			<div className="fixed top-6 left-1/2 -translate-x-1/2  z-50 flex flex-col gap-3">
+				{toasts.map((toast) => (
+					<Toast key={toast.id} {...toast} />
+				))}
+			</div>
 		</ToastContext.Provider>
 	);
 }

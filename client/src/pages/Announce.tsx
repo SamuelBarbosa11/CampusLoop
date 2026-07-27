@@ -6,7 +6,6 @@ import Spinner from "../components/smalls/Spinner";
 import UploadPhoto from "../components/form/UploadPhoto";
 
 import { useAnnounceForm } from "../hooks/useAnnounceForm";
-
 import { useIsDesktop } from "../hooks/useIsDesktop";
 
 export default function Announce() {

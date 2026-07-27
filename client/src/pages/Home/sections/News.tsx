@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import clsx from "clsx";
 
 import Text from "../../../components/text/Text";
@@ -7,10 +7,15 @@ import Filters from "../../../components/search/Filters";
 import EmptyState from "../../../components/smalls/EmptyState";
 import Spinner from "../../../components/smalls/Spinner";
 
-import { useFilters } from "../../../hooks/useFilters";
-import { useAnnounces } from "../../../hooks/api/useAnnounces";
-import { useIsDesktop } from "../../../hooks/useIsDesktop";
+import useCachedResource from "../../../hooks/useCachedResource";
 import useIsInstalled from "../../../hooks/useIsInstalled";
+import { useFilters } from "../../../hooks/useFilters";
+import { useIsDesktop } from "../../../hooks/useIsDesktop";
+import { useDebounce } from "../../../hooks/useDebounce";
+
+import { getAnnounces } from "../../../services/announce.service";
+
+import { getAnnouncesCacheKey } from "../../../utils/buildCacheKeys";
 
 import type { Announce } from "../../../types/announce.types";
 
@@ -18,11 +23,19 @@ export default function News() {
 	const isDesktop = useIsDesktop();
 	const isInstalled = useIsInstalled();
 
-	const { findAll, loadingAnnounces } = useAnnounces();
-
 	const [announces, setAnnounces] = useState<Announce[]>([]);
 
 	const filters = useFilters();
+	const debouncedSearch = useDebounce(filters.search, 500);
+	const filtersData = useMemo(
+		() => ({
+			category: filters.category,
+			donation: filters.donation,
+			search: debouncedSearch,
+			sort: filters.sort,
+		}),
+		[filters.category, filters.donation, debouncedSearch, filters.sort]
+	);
 
 	const categories = [
 		"Todos",
@@ -44,16 +57,19 @@ export default function News() {
 		},
 	];
 
+	const { load, isLoading } = useCachedResource({
+		cacheKey: getAnnouncesCacheKey(filtersData),
+
+		request: getAnnounces,
+
+		params: [filtersData],
+
+		onData: setAnnounces,
+	});
+
 	useEffect(() => {
-		findAll({
-			category: filters.category,
-			donation: filters.donation,
-			search: filters.search,
-			sort: filters.sort,
-		})
-			.then(setAnnounces)
-			.catch(console.error);
-	}, [filters.category, filters.donation, filters.search, filters.sort]);
+		load();
+	}, [load]);
 
 	return (
 		<section id="news" className="mb-48">
@@ -90,7 +106,7 @@ export default function News() {
 				className={clsx("md:overflow-x-auto py-6", isInstalled && "mt-24")}
 			>
 				<ul className="flex flex-wrap justify-center md:justify-start md:flex-nowrap gap-6 md:px-3">
-					{loadingAnnounces ? (
+					{isLoading ? (
 						<div className="w-full min-h-screen flex justify-center items-center">
 							<Spinner />
 						</div>

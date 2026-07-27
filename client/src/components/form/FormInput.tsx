@@ -10,19 +10,19 @@ import Text from "../text/Text";
 interface FormInputProps extends InputHTMLAttributes<HTMLInputElement> {
 	label: string;
 	placeholder?: string;
-	error?: string;
 	viewEye?: boolean;
 	className?: string;
 	type?: string;
+	invalid?: boolean;
 }
 
 export default function FormInput({
 	label,
 	placeholder,
-	error,
 	viewEye = false,
 	className,
 	type = "text",
+	invalid,
 	...props
 }: FormInputProps) {
 	const [showPassword, setShowPassword] = useState(false);
@@ -39,7 +39,7 @@ export default function FormInput({
 			<div
 				className={clsx(
 					"relative w-full min-w-0 flex flex-col rounded-xl border border-(--shark) bg-(--woodsmoke-secondary) px-4 py-3 focus-within:border-(--mauve) transition-colors duration-300",
-					error && "border-red-500",
+					invalid && "border-red-500",
 					className
 				)}
 			>
@@ -68,12 +68,6 @@ export default function FormInput({
 					</button>
 				)}
 			</div>
-
-			{error && (
-				<Text variant="heading" className="text-red-500">
-					{error}
-				</Text>
-			)}
 		</div>
 	);
 }

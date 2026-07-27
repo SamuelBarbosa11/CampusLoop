@@ -14,7 +14,7 @@ export function getAuthErrorMessage(error: unknown): string {
 		case "email rate limit exceeded":
 			return "Você solicitou muitos e-mails em pouco tempo. Aguarde alguns minutos antes de tentar novamente.";
 		
-		case "Unprocessable Content":
+		case "New password should be different from the old password.":
 			return "A nova senha deve ser diferente da atual";
 
 		default:

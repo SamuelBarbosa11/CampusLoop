@@ -1,28 +1,44 @@
 import { useEffect, useState } from "react";
 
-import { supabase } from "../../../api/supabase";
+import { useAuth } from "../../../hooks/useAuth";
 
 import type { AuthMode } from "../types";
 
 export function useAuthMode() {
-	const [mode, setMode] = useState<AuthMode>("login");
+	const [mode, setMode] = useState<AuthMode>(() => {
+		const params = new URLSearchParams(window.location.search);
+
+		return (params.get("mode") as AuthMode) ?? "login";
+	});
+
+	function changeMode(mode: AuthMode) {
+		setMode(mode);
+
+		const params = new URLSearchParams(window.location.search);
+
+		if (mode === "login") {
+			params.delete("mode");
+		} else {
+			params.set("mode", mode);
+		}
+
+		window.history.replaceState(
+			{},
+			"",
+			`${window.location.pathname}?${params}`
+		);
+	}
+
+	const { isRecoveringPassword } = useAuth();
 
 	useEffect(() => {
-		const {
-			data: { subscription },
-		} = supabase.auth.onAuthStateChange((event) => {
-			if (event === "PASSWORD_RECOVERY") {
-				setMode("reset");
-			}
-		});
-
-		return () => {
-			subscription.unsubscribe();
-		};
-	}, []);
+		if (isRecoveringPassword) {
+			changeMode("reset");
+		}
+	}, [isRecoveringPassword]);
 
 	return {
 		mode,
-		setMode,
+		setMode: changeMode,
 	};
 }

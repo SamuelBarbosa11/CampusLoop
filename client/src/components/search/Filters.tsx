@@ -65,8 +65,9 @@ export default function Filters(props: FiltersProps) {
 				)}
 
 				<div className="flex gap-2 overflow-x-auto">
-					{props.categories.map((categoryName) => (
+					{props.categories.map((categoryName, index) => (
 						<Filter
+							key={index}
 							label={categoryName}
 							selected={categoryName === props.category}
 							onSelect={() => props.onCategoryChange(categoryName)}

@@ -1,19 +1,19 @@
-import { useState } from "react";
+import { useState, type ChangeEvent } from "react";
 
-import type { ChangeEvent } from "react";
-
-import { useAuth } from "../../../hooks/useAuth";
-import type { AuthMode } from "../types";
-
-import { getAuthErrorMessage } from "../../../utils/auth.errors";
-import { validateEmail } from "../../../utils/validators";
-import { useIsDesktop } from "../../../hooks/useIsDesktop";
-
+import Text from "../../../components/text/Text";
 import FormButton from "../../../components/form/FormButton";
 import FormInput from "../../../components/form/FormInput";
 
-import Text from "../../../components/text/Text";
+import { useAuth } from "../../../hooks/useAuth";
+import { useIsDesktop } from "../../../hooks/useIsDesktop";
+import useOnlineStatus from "../../../hooks/useOnlineStatus";
 
+import { toast } from "../../../services/toast";
+
+import { getAuthErrorMessage } from "../../../utils/auth.errors";
+import { validateEmail } from "../../../utils/validators";
+
+import type { AuthMode } from "../types";
 interface LoginFormProps {
 	setMode: (mode: AuthMode) => void;
 }
@@ -26,8 +26,11 @@ interface LoginFormData {
 export default function LoginForm({ setMode }: LoginFormProps) {
 	const { login } = useAuth();
 
+	const [submitted, setSubmitted] = useState(false);
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState("");
+
+	const isOnline = useOnlineStatus();
 
 	const [formData, setFormData] = useState<LoginFormData>({
 		email: "",
@@ -46,12 +49,18 @@ export default function LoginForm({ setMode }: LoginFormProps) {
 	async function handleSubmit() {
 		try {
 			setLoading(true);
+			setSubmitted(true);
 
 			// Validação de Email
 			const emailError = validateEmail(formData.email);
 
 			if (emailError) {
 				setError(emailError);
+				return;
+			}
+
+			if (!isOnline) {
+				toast.error("Verifique sua conexão com a internet e tente novamente.");
 				return;
 			}
 
@@ -80,6 +89,7 @@ export default function LoginForm({ setMode }: LoginFormProps) {
 				name="email"
 				value={formData.email}
 				onChange={handleChange}
+				invalid={submitted && Boolean(validateEmail(formData.email))}
 				required
 			/>
 
@@ -90,6 +100,7 @@ export default function LoginForm({ setMode }: LoginFormProps) {
 				value={formData.password}
 				onChange={handleChange}
 				viewEye
+				invalid={submitted && !formData.password}
 				required
 			/>
 
@@ -97,7 +108,7 @@ export default function LoginForm({ setMode }: LoginFormProps) {
 				as="button"
 				variant="heading"
 				type="button"
-				className="text-sm text-(--secondary) transition duration-300 hover:text-(--text-primary) justify-self-end"
+				className="text-sm text-(--secondary) justify-self-end cursor-pointer transition duration-300 hover:text-(--text-primary)"
 				onClick={() => setMode("forgot")}
 			>
 				Esqueci minha senha

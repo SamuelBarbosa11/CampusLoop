@@ -1,16 +1,18 @@
-import { useState } from "react";
-import type { ChangeEvent } from "react";
-
-import { useAuth } from "../../../hooks/useAuth";
-
-import type { AuthMode } from "../types";
+import { useState, type ChangeEvent } from "react";
 
 import FormInput from "../../../components/form/FormInput";
 import FormButton from "../../../components/form/FormButton";
 import Text from "../../../components/text/Text";
 
-import { validateEmail } from "../../../utils/validators";
+import { useAuth } from "../../../hooks/useAuth";
 import { useIsDesktop } from "../../../hooks/useIsDesktop";
+import useOnlineStatus from "../../../hooks/useOnlineStatus";
+
+import { toast } from "../../../services/toast";
+
+import { validateEmail } from "../../../utils/validators";
+
+import type { AuthMode } from "../types";
 
 interface RegisterFormProps {
 	setMode: (mode: AuthMode) => void;
@@ -26,8 +28,11 @@ interface RegisterFormData {
 export default function RegisterForm({ setMode }: RegisterFormProps) {
 	const { register } = useAuth();
 
+	const [submitted, setSubmitted] = useState(false);
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState("");
+
+	const isOnline = useOnlineStatus();
 
 	const [formData, setFormData] = useState<RegisterFormData>({
 		name: "",
@@ -48,6 +53,7 @@ export default function RegisterForm({ setMode }: RegisterFormProps) {
 	async function handleSubmit() {
 		try {
 			setLoading(true);
+			setSubmitted(true);
 
 			// Validação de nome
 			if (!formData.name) {
@@ -65,6 +71,11 @@ export default function RegisterForm({ setMode }: RegisterFormProps) {
 			// Validação de Senhas
 			if (formData.password !== formData.confirmPassword) {
 				setError("As senhas devem ser iguais!");
+				return;
+			}
+
+			if (!isOnline) {
+				toast.error("Verifique sua conexão com a internet e tente novamente.");
 				return;
 			}
 
@@ -104,6 +115,7 @@ export default function RegisterForm({ setMode }: RegisterFormProps) {
 				name="email"
 				value={formData.email}
 				onChange={handleChange}
+				invalid={submitted && Boolean(validateEmail(formData.email))}
 				required
 			/>
 
@@ -113,6 +125,7 @@ export default function RegisterForm({ setMode }: RegisterFormProps) {
 				name="password"
 				value={formData.password}
 				onChange={handleChange}
+				invalid={submitted && !formData.password}
 				viewEye
 				required
 			/>
@@ -123,6 +136,11 @@ export default function RegisterForm({ setMode }: RegisterFormProps) {
 				name="confirmPassword"
 				value={formData.confirmPassword}
 				onChange={handleChange}
+				invalid={
+					submitted &&
+					(!formData.confirmPassword ||
+						formData.password !== formData.confirmPassword)
+				}
 				viewEye
 				required
 			/>
