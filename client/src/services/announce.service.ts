@@ -39,6 +39,14 @@ export async function getAnnouncesByUserId(id: string) {
 	return api<Announce[]>(`/announces/user/${id}`);
 }
 
+export async function getCategories() {
+	return api<string[]>(`/announces/categories`);
+}
+
+export async function getMyCategories() {
+	return api<string[]>("/announces/me/categories");
+}
+
 export async function removeAnnounce(id: string) {
 	return api<void>(`/announces/${id}`, {
 		method: "DELETE",

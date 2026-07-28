@@ -36,6 +36,18 @@ export async function getMine(req: Request, res: Response) {
 	res.json(announces);
 }
 
+export async function getCategories(req: Request, res: Response) {
+	const categories = await announceService.findCategories();
+
+	res.json(categories);
+}
+
+export async function getMyCategories(req: Request, res: Response) {
+	const categories = await announceService.findCategories(req.user.id);
+
+	res.json(categories);
+}
+
 export async function create(req: Request, res: Response) {
 	const announce = await announceService.create(req.user.id, req.body);
 

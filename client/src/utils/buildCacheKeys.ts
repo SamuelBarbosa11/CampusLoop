@@ -22,6 +22,14 @@ export function getAnnouncesPublicProfileCacheKey(id: string) {
 	return CACHE_KEYS.ANNOUNCES_PROFILE_PUBLIC(id);
 }
 
+export function getCategoriesCacheKey() {
+	return CACHE_KEYS.CATEGORIES;
+}
+
+export function getMyCategoriesCacheKey() {
+	return CACHE_KEYS.CATEGORIES_ME;
+}
+
 // Profile
 
 export function getMyProfileCacheKey() {

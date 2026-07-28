@@ -16,10 +16,10 @@ import { useFilters } from "../hooks/useFilters";
 import { useDebounce } from "../hooks/useDebounce";
 import { useIsDesktop } from "../hooks/useIsDesktop";
 
-import { getMyAnnounces } from "../services/announce.service";
+import { getMyAnnounces, getMyCategories } from "../services/announce.service";
 import { toast } from "../services/toast";
 
-import { getMyAnnouncesCacheKey } from "../utils/buildCacheKeys";
+import { getMyAnnouncesCacheKey, getMyCategoriesCacheKey } from "../utils/buildCacheKeys";
 
 import type { Announce } from "../types/announce.types";
 
@@ -32,6 +32,7 @@ export default function Dashboard() {
 	const { remove } = useAnnounces();
 
 	const [announces, setAnnounces] = useState<Announce[]>([]);
+	const [categories, setCategories] = useState<string[]>([]);
 
 	const filters = useFilters();
 	const debouncedSearch = useDebounce(filters.search, 500);
@@ -45,10 +46,19 @@ export default function Dashboard() {
 		[filters.category, filters.donation, debouncedSearch, filters.sort]
 	);
 
-	const categories = [
-		"Todos",
-		...Array.from(new Set(announces.map((a) => a.category))),
-	];
+	const loadCategories = useCachedResource({
+		cacheKey: getMyCategoriesCacheKey(),
+
+		request: getMyCategories,
+
+		params: [],
+
+		onData: setCategories,
+	});
+
+	useEffect(() => {
+		loadCategories.load();
+	}, []);
 
 	const orders = [
 		{
@@ -122,7 +132,7 @@ export default function Dashboard() {
 			<div id="filters" className="w-full max-h-max flex flex-col gap-2">
 				<Filters
 					search={filters.search}
-					categories={categories}
+					categories={["Todos", ...categories]}
 					sorts={orders}
 					category={filters.category}
 					donation={filters.donation}

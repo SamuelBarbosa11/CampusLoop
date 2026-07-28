@@ -8,4 +8,8 @@ export const CACHE_KEYS = {
 	ANNOUNCES_PROFILE_PUBLIC: (id: string) => `announces-profile-${id}`,
 
 	PROFILE_PUBLIC: (id: string) => `profile-${id}`,
+
+	CATEGORIES: "categories",
+
+	CATEGORIES_ME: "categories-me",
 };

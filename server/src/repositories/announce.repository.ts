@@ -5,6 +5,7 @@ import type {
 	AnnounceFilters,
 	CreateAnnounceDTO,
 	UpdateAnnounceDTO,
+	CategoryRow,
 } from "../types/announce.types.js";
 
 export async function findAll(filters: AnnounceFilters) {
@@ -90,6 +91,22 @@ export async function findByUserId(userId: string) {
 	if (error) throw error;
 
 	return data;
+}
+
+export async function findCategories(userId?: string) {
+	let query = supabase
+		.from("announces")
+		.select("category");
+
+	if (userId) {
+		query = query.eq("user_id", userId);
+	}
+
+	const { data, error } = await query.overrideTypes<CategoryRow[]>();
+
+	if (error) throw error;
+
+	return [...new Set(data.map(item => item.category))];
 }
 
 export async function create(data: CreateAnnounceDTO) {

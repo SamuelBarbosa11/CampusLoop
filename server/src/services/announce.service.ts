@@ -46,6 +46,10 @@ export async function findByUserId(id: string) {
 	return announces;
 }
 
+export async function findCategories(userId?: string) {
+	return announceRepository.findCategories(userId);
+}
+
 export async function create(userId: string, data: CreateAnnounceDTO) {
 	if (!data.donation && (data.price == null || data.price < 0)) {
 		throw new AppError("Preço inválido.");

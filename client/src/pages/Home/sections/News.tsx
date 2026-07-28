@@ -13,9 +13,9 @@ import { useFilters } from "../../../hooks/useFilters";
 import { useIsDesktop } from "../../../hooks/useIsDesktop";
 import { useDebounce } from "../../../hooks/useDebounce";
 
-import { getAnnounces } from "../../../services/announce.service";
+import { getAnnounces, getCategories } from "../../../services/announce.service";
 
-import { getAnnouncesCacheKey } from "../../../utils/buildCacheKeys";
+import { getAnnouncesCacheKey, getCategoriesCacheKey } from "../../../utils/buildCacheKeys";
 
 import type { Announce } from "../../../types/announce.types";
 
@@ -24,6 +24,7 @@ export default function News() {
 	const isInstalled = useIsInstalled();
 
 	const [announces, setAnnounces] = useState<Announce[]>([]);
+	const [categories, setCategories] = useState<string[]>([]);
 
 	const filters = useFilters();
 	const debouncedSearch = useDebounce(filters.search, 500);
@@ -37,10 +38,19 @@ export default function News() {
 		[filters.category, filters.donation, debouncedSearch, filters.sort]
 	);
 
-	const categories = [
-		"Todos",
-		...Array.from(new Set(announces.map((a) => a.category))),
-	];
+	const loadCategories = useCachedResource({
+		cacheKey: getCategoriesCacheKey(),
+
+		request: getCategories,
+
+		params: [],
+
+		onData: setCategories,
+	});
+
+	useEffect(() => {
+		loadCategories.load();
+	}, []);
 
 	const orders = [
 		{
@@ -88,7 +98,7 @@ export default function News() {
 						<Filters
 							search={filters.search}
 							onSearchChange={filters.setSearch}
-							categories={categories}
+							categories={["Todos", ...categories]}
 							sorts={orders}
 							category={filters.category}
 							donation={filters.donation}

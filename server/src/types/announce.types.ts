@@ -48,3 +48,7 @@ export interface AnnounceFilters {
 	user_id?: string;
 	sort?: SortOption;
 }
+
+export type CategoryRow = {
+	category: string;
+};
