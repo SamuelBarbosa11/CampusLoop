@@ -21,10 +21,6 @@ export default defineConfig({
 
 			includeAssets: ["favicon.svg"],
 
-			devOptions: {
-				enabled: true,
-			},
-
 			manifest: {
 				name: "CampusLoop",
 				short_name: "CampusLoop",
