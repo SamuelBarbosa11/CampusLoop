@@ -30,29 +30,22 @@ Uma aplicação Full-Stack desenvolvida como desafio técnico para o processo se
 
 </div>
 
-O **CampusLoop** é um marketplace universitário desenvolvido para conectar estudantes interessados em comprar, vender ou doar materiais acadêmicos, promovendo o reaproveitamento de recursos dentro da comunidade universitária por meio de uma experiência moderna, responsiva e segura.
+O **CampusLoop** é um marketplace universitário desenvolvido para conectar estudantes interessados em comprar, vender ou doar materiais acadêmicos, incentivando o reaproveitamento de recursos dentro da comunidade universitária.
 
-Além da funcionalidade principal de marketplace, o projeto foi desenvolvido com foco em:
-
-- arquitetura escalável;
-- boas práticas de desenvolvimento;
-- experiência de usuário;
-- cache inteligente;
-- autenticação segura;
-- organização de código;
-- responsividade;
-- Progressive Web App (PWA).
+O projeto foi construído como desafio técnico com foco em arquitetura escalável, experiência do usuário e boas práticas de desenvolvimento, resultando em uma aplicação moderna, responsiva e preparada para produção.
 
 ## 🚀 Destaques
 
-- Marketplace universitário
-- Autenticação completa com Supabase
-- Cache inteligente (Stale While Revalidate)
-- PWA instalável
-- Upload de imagens
-- API REST
-- Arquitetura em camadas
-- Responsividade Desktop + Mobile
+| Recurso | Descrição |
+|----------|-----------|
+| 🎓 Marketplace | Compra, venda e doação de itens universitários |
+| 🔐 Autenticação | Login seguro utilizando Supabase Auth |
+| ⚡ Cache | Estratégia Stale While Revalidate |
+| 📱 PWA | Aplicação instalável |
+| 🖼️ Upload | Envio de imagens para anúncios |
+| 🌐 API REST | Backend próprio |
+| 🏗️ Arquitetura | Organização em camadas |
+| 📲 Responsividade | Experiência Desktop e Mobile |
 
 <div align="center">
 
@@ -127,7 +120,7 @@ CampusLoop
 └── supabase <- .SQL
 ```
 
-## Frontend
+## client
 
 ```text
 src
@@ -154,7 +147,7 @@ O Frontend utiliza uma arquitetura baseada em responsabilidades, separando clara
 - Tipagens
 - Utilitários
 
-## Backend
+## server
 
 ```text
 src
@@ -204,6 +197,26 @@ Supabase
 Toda requisição percorre uma arquitetura em camadas, permitindo validações, autenticação, tratamento de erros e separação clara das responsabilidades.
 
 Essa separação facilita manutenção, testes e evolução do projeto.
+
+## supabase
+
+```text
+supabase
+│
+├── schemas
+├── policies
+└── seeds
+```
+
+Esta pasta reúne todos os scripts SQL necessários para recriar a estrutura do banco de dados em um projeto próprio no Supabase, preservando a arquitetura utilizada pelo CampusLoop.
+
+Ela está organizada em três grupos:
+
+- **Schemas:** criação das tabelas, relacionamentos, índices e demais estruturas do banco de dados.
+- **Policies:** configuração das políticas de segurança (Row Level Security - RLS), controlando o acesso aos dados conforme as regras da aplicação.
+- **Seeds:** inserção de dados iniciais para facilitar testes e o desenvolvimento local.
+
+Essa organização permite que qualquer desenvolvedor replique a estrutura do banco de dados de forma rápida, mantendo compatibilidade com o Backend e o Frontend sem depender do projeto original no Supabase.
 
 <div align="center">
 
@@ -407,33 +420,12 @@ http://localhost:3001 (ou "localhost:PORT" com a PORT alocada no .env)
 
 # 🌐 Deploy
 
-</div>
+| Frontend | Backend |
+|----------|----------|
+| <a href="https://campusloop-vortex.vercel.app/" target="_blank"><img src="https://img.shields.io/badge/Vercel-Live%20Application-000000?style=for-the-badge&logo=vercel" /></a> | <img src="https://img.shields.io/badge/Railway-Internal%20API-6B57FF?style=for-the-badge&logo=railway" /> |
 
-<div align="center">
+<sub>O Backend é consumido exclusivamente pela aplicação Frontend.</sub>
 
-### Frontend
-
-</div>
-
-<div align="center">
-  <a href="https://campusloop-vortex.vercel.app/" target="_blank" style="text-decoration: none;">
-    <button style="background-color: #28282f; color: white; padding: 10px 20px; border: none; border-radius: .5rem; font-size: 1rem; font-weight: bold; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-      🔺 Vercel
-    </button>
-  </a>
-</div>
-
-<div align="center">
-
-### Backend
-
-</div>
-
-<div style="display: flex; flex-direction: column; justify-content: center; align-items: center; margin-bottom: 3rem;">
-  <button style="background-color: #8e8e98; color: white; padding: 10px 20px; border: none; border-radius: .5rem; font-size: 1rem; font-weight: bold; cursor: default; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin-bottom: .5rem;">
-    🚅 Railway
-  </button>
-  Consumo da API é feita de forma interna pelo Frontend
 </div>
 
 <div align="center">
