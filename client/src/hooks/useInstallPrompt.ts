@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 
+import { toast } from "../services/toast";
+
 interface BeforeInstallPromptEvent extends Event {
 	prompt: () => Promise<void>;
 
@@ -12,6 +14,10 @@ interface BeforeInstallPromptEvent extends Event {
 export default function useInstallPrompt() {
 	const [installPrompt, setInstallPrompt] =
 		useState<BeforeInstallPromptEvent | null>(null);
+
+	const isIOS =
+		/iPad|iPhone|iPod/.test(navigator.userAgent) ||
+		(navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
 
 	useEffect(() => {
 		function handleBeforeInstallPrompt(event: Event) {
@@ -31,19 +37,34 @@ export default function useInstallPrompt() {
 	}, []);
 
 	async function install() {
-		if (!installPrompt) return;
+		// Safari
+		if (isIOS) {
+			toast.info(
+				"No Safari, toque em Compartilhar → Adicionar à Tela de Início."
+			);
+			return;
+		}
+
+		// Chrome ainda não liberou o prompt
+		if (!installPrompt) {
+			toast.info(
+				"O navegador ainda não liberou a instalação. Continue navegando por alguns instantes e tente novamente."
+			);
+			return;
+		}
 
 		await installPrompt.prompt();
 
-		const result = await installPrompt.userChoice;
+		const { outcome } = await installPrompt.userChoice;
 
-		console.log("Resultado instalação:", result.outcome);
+		if (outcome === "accepted") {
+			toast.success("Aplicativo instalado com sucesso!");
+		}
 
 		setInstallPrompt(null);
 	}
 
 	return {
-		canInstall: Boolean(installPrompt),
 		install,
 	};
 }

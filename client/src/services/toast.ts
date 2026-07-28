@@ -34,6 +34,7 @@ export const toast = {
 		return showFn?.({
 			type: "info",
 			message,
+			duration: 7500,
 		});
 	},
 

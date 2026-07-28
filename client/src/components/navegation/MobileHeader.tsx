@@ -8,21 +8,23 @@ import Hello from "../smalls/Hello";
 
 import useIsInstalled from "../../hooks/useIsInstalled";
 import useInstallPrompt from "../../hooks/useInstallPrompt";
+import { useIsDesktop } from "../../hooks/useIsDesktop";
 
 export default function MobileHeader() {
 	const navigate = useNavigate();
 
 	const { isAuthenticated } = useAuth();
 
+	const isDesktop = useIsDesktop();
 	const isInstalled = useIsInstalled();
 
-	const { canInstall, install } = useInstallPrompt();
+	const { install } = useInstallPrompt();
 
 	return (
 		<div className="absolute top-0 bg-(--navbar) backdrop-blur-md p-4 w-screen flex justify-between items-center z-100">
 			<Logo />
 
-			{!isInstalled && canInstall && (
+			{!isInstalled && !isDesktop && (
 				<Text
 					as="button"
 					variant="heading"
