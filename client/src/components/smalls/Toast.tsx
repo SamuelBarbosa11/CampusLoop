@@ -43,7 +43,7 @@ export default function Toast({ id, type, message, visible }: ToastProps) {
 	return (
 		<div
 			className={clsx(
-				"transition-all duration-300 z-150",
+				"transition-all duration-300 z-200",
 				visible
 					? "translate-y-0 opacity-100"
 					: "-translate-y-24 opacity-0 pointer-events-none"
