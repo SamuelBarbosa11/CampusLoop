@@ -44,8 +44,8 @@ export default function Card({
 			className={clsx(
 				"shrink-0 bg-(--woodsmoke) rounded-3xl",
 				keepStyle
-					? "w-72 min-h-120 border border-(--shark)"
-					: "w-full md:w-72 md:min-h-120 md:border md:border-(--shark)",
+					? "w-72 min-h-125 border border-(--shark)"
+					: "w-full md:w-72 md:min-h-125 md:border md:border-(--shark)",
 				clickable &&
 					"group transition duration-200 hover:border-(--dark-purple) md:hover:z-1 md:hover:scale-105 md:hover:animate-[bouncing_3s_ease-in-out_infinite]",
 				className
@@ -64,9 +64,7 @@ export default function Card({
 				<div className="aspect-square w-full md:w-72 md:max-h-72 rounded-t-3xl bg-(--shark) animate-pulse"></div>
 			)}
 
-			<figcaption
-				className={clsx("py-5", keepStyle ? "px-3" : "md:px-5")}
-			>
+			<figcaption className={clsx("py-5", keepStyle ? "px-3" : "md:px-5")}>
 				<div className="w-full flex items-start gap-3">
 					<Text
 						variant="card_title"
@@ -96,14 +94,23 @@ export default function Card({
 					</div>
 				</div>
 
-				<Text
-					variant="card_description"
-					className="text-(--secondary) line-clamp-2 mt-2"
-				>
-					{item.description}
-				</Text>
+				<div className="flex flex-col gap-4 mt-2">
+					<Text
+						variant="card_description"
+						className="text-(--secondary) line-clamp-2"
+					>
+						{item.description}
+					</Text>
 
-				<div className="flex flex-start items-center gap-2 mt-3">
+					<Text
+						variant="card_description"
+						className="text-(--secondary) uppercase"
+					>
+						{item.category}
+					</Text>
+				</div>
+
+				<div className="flex flex-start items-center gap-2 mt-4">
 					{item.user.photo_url ? (
 						<img
 							src={item.user.photo_url}
