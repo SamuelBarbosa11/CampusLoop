@@ -137,7 +137,7 @@ export default function ForgotPasswordForm({
 				as="button"
 				type="button"
 				variant="muted"
-				className="text-(--secondary) transition-colors duration-200 hover:text-(--primary) hover:underline"
+				className="text-(--secondary) transition-colors duration-200 hover:text-(--primary) hover:underline cursor-pointer"
 				onClick={() => setMode("login")}
 			>
 				Voltar
