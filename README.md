@@ -152,6 +152,7 @@ O Frontend utiliza uma arquitetura baseada em responsabilidades, separando clara
 ```text
 src
 │
+├── config
 ├── controllers
 ├── middlewares
 ├── repositories
@@ -275,6 +276,7 @@ Durante o desenvolvimento algumas decisões foram tomadas visando escalabilidade
 - Supabase
 - Zod
 - JWT
+- Cloudinary
 
 ## Banco de dados
 
@@ -282,7 +284,7 @@ Durante o desenvolvimento algumas decisões foram tomadas visando escalabilidade
 
 ## Infraestrutura
 
-- Railway
+- Render
 - Vercel
 - Supabase
 
@@ -395,13 +397,15 @@ Crie:
 Configure:
 
 ```env
-PORT=
-
 SUPABASE_URL=
 
 SUPABASE_SERVICE_ROLE_KEY=
 
-IMGBB_API_KEY=
+CLOUDINARY_CLOUD_NAME=
+CLOUDINARY_API_KEY=
+CLOUDINARY_API_SECRET=
+
+PORT=
 ```
 
 Execute:
@@ -421,8 +425,8 @@ http://localhost:3001 (ou "localhost:PORT" com a PORT alocada no .env)
 # 🌐 Deploy
 
 | Frontend | Backend |
-|----------|----------|
-| <a href="https://campusloop-vortex.vercel.app/" target="_blank"><img src="https://img.shields.io/badge/Vercel-Live%20Application-000000?style=for-the-badge&logo=vercel" /></a> | <img src="https://img.shields.io/badge/Railway-Internal%20API-6B57FF?style=for-the-badge&logo=railway" /> |
+|----------|---------|
+| <a href="https://campusloop-vortex.vercel.app/" target="_blank"><img src="https://img.shields.io/badge/Vercel-Live%20Application-000000?style=for-the-badge&logo=vercel" /></a> | <img src="https://img.shields.io/badge/Render-Internal%20API-46E3B7?style=for-the-badge&logo=render" /> |
 
 <sub>O Backend é consumido exclusivamente pela aplicação Frontend.</sub>
 

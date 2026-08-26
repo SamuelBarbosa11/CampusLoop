@@ -138,11 +138,18 @@ Campo:
 
 image
 
-Resposta:
+Exemplo de Resposta:
 
 ```json
 {
-	"url": "https://i.ibb.co/..."
+  "public_id": "c87hg9xfxrd4itiim3t0",
+  "version": 1571218607,
+  "width": 864,
+  "height": 576,
+  "format": "jpg",
+  "resource_type": "image",
+  "url": "http://res.cloudinary.com/demo/image/upload/v1571218607/c87hg9xfxrd4itiim3t0.jpg",
+  "secure_url": "https://res.cloudinary.com/demo/image/upload/v1571218607/c87hg9xfxrd4itiim3t0.jpg"
 }
 ```
 
@@ -171,4 +178,4 @@ Resposta:
 - PostgreSQL
 - Zod
 - Multer
-- ImgBB
+- Cloudinary
