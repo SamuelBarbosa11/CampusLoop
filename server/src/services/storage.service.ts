@@ -1,3 +1,7 @@
+import { PassThrough } from "node:stream";
+
+import cloudinary from "../config/cloudinary.js";
+
 import { AppError } from "../utils/AppError.js";
 
 const MAX_MB_FILE_SIZE = 32;
@@ -18,38 +22,40 @@ export async function uploadImage(file: Express.Multer.File) {
 		throw new AppError(`A imagem excede o limite de ${MAX_MB_FILE_SIZE} MB.`);
 	}
 
-	const formData = new FormData();
-
-	formData.append("image", file.buffer.toString("base64"));
-
 	try {
-		const response = await fetch(
-			`https://api.imgbb.com/1/upload?key=${process.env.IMGBB_API_KEY}`,
-			{
-				method: "POST",
-				body: formData,
-			}
-		);
+		const result = await new Promise<{
+			secure_url: string;
+		}>((resolve, reject) => {
+			const stream = cloudinary.uploader.upload_stream(
+				{
+					resource_type: "image",
+					folder: "campusloop",
+				},
+				(error, result) => {
+					if (error) {
+						reject(error);
+						return;
+					}
 
-		const result = await response.json();
+					if (!result?.secure_url) {
+						reject(new Error("Cloudinary não retornou a URL da imagem."));
+						return;
+					}
 
-		console.log({
-			hasImgBBKey: Boolean(process.env.IMGBB_API_KEY),
-			keyLength: process.env.IMGBB_API_KEY?.length,
+					resolve(result as { secure_url: string });
+				}
+			);
+
+			const bufferStream = new PassThrough();
+
+			bufferStream.end(file.buffer);
+			bufferStream.pipe(stream);
 		});
-		
-		if (!response.ok) {
-			throw new AppError(result?.error?.message ?? "Erro ao enviar imagem.");
-		}
 
-		return result.data.url;
+		return result.secure_url;
 	} catch (error) {
-		console.error("ImgBB upload error:", error);
+		console.error("Cloudinary upload error:", error);
 
-		if (error instanceof AppError) {
-			throw error;
-		}
-
-		throw new AppError("Não foi possível conectar ao ImgBB.", 500);
+		throw new AppError("Não foi possível enviar a imagem.", 500);
 	}
 }
