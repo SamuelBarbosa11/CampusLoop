@@ -30,16 +30,25 @@ export async function uploadImage(file: Express.Multer.File) {
 				body: formData,
 			}
 		);
-		
-		if (!response.ok) {
-			throw new AppError("Erro ao enviar imagem.");
-		}
 
 		const result = await response.json();
 
+		console.log({
+			hasImgBBKey: Boolean(process.env.IMGBB_API_KEY),
+			keyLength: process.env.IMGBB_API_KEY?.length,
+		});
+		
+		if (!response.ok) {
+			throw new AppError(result?.error?.message ?? "Erro ao enviar imagem.");
+		}
+
 		return result.data.url;
 	} catch (error) {
-		console.error(error);
+		console.error("ImgBB upload error:", error);
+
+		if (error instanceof AppError) {
+			throw error;
+		}
 
 		throw new AppError("Não foi possível conectar ao ImgBB.", 500);
 	}
