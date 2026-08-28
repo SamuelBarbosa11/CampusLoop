@@ -1,5 +1,7 @@
 export function getAuthErrorMessage(error: unknown): string {
-	if (!(error instanceof Error)) return "Erro inesperado.";
+	if (!(error instanceof Error)) {
+		return "Ocorreu um erro inesperado.";
+	}
 
 	switch (error.message) {
 		case "Email not confirmed":
@@ -13,7 +15,7 @@ export function getAuthErrorMessage(error: unknown): string {
 
 		case "email rate limit exceeded":
 			return "Você solicitou muitos e-mails em pouco tempo. Aguarde alguns minutos antes de tentar novamente.";
-		
+
 		case "New password should be different from the old password.":
 			return "A nova senha deve ser diferente da atual";
 

@@ -16,32 +16,35 @@ export function registerToasts(toasts: {
 }
 
 export const toast = {
-	success(message: string) {
+	success(message: string, time?: number) {
 		return showFn?.({
 			type: "success",
 			message,
+			duration: time ?? 0,
 		});
 	},
 
-	error(message: string) {
+	error(message: string, time?: number) {
 		return showFn?.({
 			type: "error",
 			message,
+			duration: time ?? 0,
 		});
 	},
 
-	info(message: string) {
+	info(message: string, time?: number) {
 		return showFn?.({
 			type: "info",
 			message,
-			duration: 7500,
+			duration: time ?? 7500,
 		});
 	},
 
-	warning(message: string) {
+	warning(message: string, time?: number) {
 		return showFn?.({
 			type: "warning",
 			message,
+			duration: time ?? 0,
 		});
 	},
 

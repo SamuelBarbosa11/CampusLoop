@@ -13,6 +13,7 @@ import { toast } from "../../../services/toast";
 import { validateEmail } from "../../../utils/validators";
 
 import type { AuthMode } from "../types";
+import { getAuthErrorMessage } from "../../../utils/auth.errors";
 
 interface RegisterFormProps {
 	setMode: (mode: AuthMode) => void;
@@ -74,6 +75,12 @@ export default function RegisterForm({ setMode }: RegisterFormProps) {
 				return;
 			}
 
+			// Validação de tamanho de senha
+			if (formData.password.length < 6) {
+				setError("As senhas devem ter no mínimo 6 caracteres");
+				return;
+			}
+
 			if (!isOnline) {
 				toast.error("Verifique sua conexão com a internet e tente novamente.");
 				return;
@@ -81,10 +88,11 @@ export default function RegisterForm({ setMode }: RegisterFormProps) {
 
 			await register(formData);
 
-			alert("Conta criada! Verifique seu e-mail para confirmar o cadastro.");
+			toast.info("Conta criada! Verifique seu e-mail para confirmar o cadastro.");
 
 			setMode("login");
 		} catch (error) {
+			setError(getAuthErrorMessage(error))
 			console.error(error);
 		} finally {
 			setLoading(false);

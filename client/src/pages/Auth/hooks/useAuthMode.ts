@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { useAuth } from "../../../hooks/useAuth";
 
@@ -11,6 +11,8 @@ export function useAuthMode() {
 		return (params.get("mode") as AuthMode) ?? "login";
 	});
 
+	const { isRecoveringPassword } = useAuth();
+
 	function changeMode(mode: AuthMode) {
 		setMode(mode);
 
@@ -22,23 +24,17 @@ export function useAuthMode() {
 			params.set("mode", mode);
 		}
 
+		const query = params.toString();
+
 		window.history.replaceState(
 			{},
 			"",
-			`${window.location.pathname}?${params}`
+			query ? `${window.location.pathname}?${query}` : window.location.pathname
 		);
 	}
 
-	const { isRecoveringPassword } = useAuth();
-
-	useEffect(() => {
-		if (isRecoveringPassword) {
-			changeMode("reset");
-		}
-	}, [isRecoveringPassword]);
-
 	return {
-		mode,
+		mode: isRecoveringPassword ? "reset" : mode,
 		setMode: changeMode,
 	};
 }

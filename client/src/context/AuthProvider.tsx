@@ -1,8 +1,6 @@
-import { useState, useEffect } from "react";
+import { useEffect, useEffectEvent, useState, type ReactNode } from "react";
 
-import type { ReactNode } from "react";
-
-import type { User } from "@supabase/supabase-js";
+import type { AuthChangeEvent, Session, User } from "@supabase/supabase-js";
 
 import { supabase } from "../api/supabase";
 
@@ -14,10 +12,12 @@ import type {
 	ForgotPasswordDTO,
 	ResetPasswordDTO,
 } from "../types/auth.types";
+import type { Profile } from "../types/profile.types";
 
 import * as authService from "../services/auth.service";
+import { toast } from "../services/toast";
 
-import type { Profile } from "../types/profile.types";
+import { getAuthErrorMessage } from "../utils/auth.errors";
 interface AuthProviderProps {
 	children: ReactNode;
 }
@@ -28,6 +28,31 @@ export default function AuthProvider({ children }: AuthProviderProps) {
 
 	const [loading, setLoading] = useState(true);
 	const [isRecoveringPassword, setIsRecoveringPassword] = useState(false);
+
+	const handleAuthStateChange = useEffectEvent(
+		(event: AuthChangeEvent, session: Session | null) => {
+			setUser(session?.user ?? null);
+
+			if (session?.user) {
+				void loadProfile(session.user.id);
+			} else {
+				setProfile(null);
+			}
+
+			switch (event) {
+				case "PASSWORD_RECOVERY":
+					setIsRecoveringPassword(true);
+					break;
+
+				case "SIGNED_IN":
+					// Apenas um login normal limpa o estado.
+					if (!isRecoveringPassword) {
+						setIsRecoveringPassword(false);
+					}
+					break;
+			}
+		}
+	);
 
 	useEffect(() => {
 		let mounted = true;
@@ -60,33 +85,22 @@ export default function AuthProvider({ children }: AuthProviderProps) {
 	useEffect(() => {
 		const {
 			data: { subscription },
-		} = supabase.auth.onAuthStateChange((event, session) => {
-			setUser(session?.user ?? null);
-
-			if (session?.user) {
-				void loadProfile(session.user.id);
-			} else {
-				setProfile(null);
-			}
-
-			switch (event) {
-				case "PASSWORD_RECOVERY":
-					setIsRecoveringPassword(true);
-					break;
-
-				case "SIGNED_IN":
-					// Apenas um login normal limpa o estado.
-					if (!isRecoveringPassword) {
-						setIsRecoveringPassword(false);
-					}
-					break;
-			}
-		});
+		} = supabase.auth.onAuthStateChange(handleAuthStateChange);
 
 		return () => {
 			subscription.unsubscribe();
 		};
 	}, []);
+
+	async function handleAuthAction<T>(action: () => Promise<T>): Promise<T> {
+		try {
+			return await action();
+		} catch (error) {
+			toast.error(getAuthErrorMessage(error));
+
+			throw error;
+		}
+	}
 
 	async function loadProfile(userId: string) {
 		const { data, error } = await supabase
@@ -109,25 +123,19 @@ export default function AuthProvider({ children }: AuthProviderProps) {
 		await loadProfile(user.id);
 	}
 
-	const login = async (data: LoginDTO) => {
-		await authService.login(data);
-	};
+	const login = (data: LoginDTO) =>
+		handleAuthAction(() => authService.login(data));
 
-	const register = async (data: RegisterDTO) => {
-		await authService.register(data);
-	};
+	const register = (data: RegisterDTO) =>
+		handleAuthAction(() => authService.register(data));
 
-	const logout = async () => {
-		await authService.logout();
-	};
+	const logout = () => handleAuthAction(() => authService.logout());
 
-	const forgotPassword = async (data: ForgotPasswordDTO) => {
-		await authService.forgotPassword(data);
-	};
+	const forgotPassword = (data: ForgotPasswordDTO) =>
+		handleAuthAction(() => authService.forgotPassword(data));
 
-	const resetPassword = async (data: ResetPasswordDTO) => {
-		await authService.resetPassword(data);
-	};
+	const resetPassword = (data: ResetPasswordDTO) =>
+		handleAuthAction(() => authService.resetPassword(data));
 
 	function finishPasswordRecovery() {
 		setIsRecoveringPassword(false);
