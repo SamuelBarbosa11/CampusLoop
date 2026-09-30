@@ -1,4 +1,10 @@
-import { useEffect, useState, useRef, type ChangeEvent } from "react";
+import {
+	useEffect,
+	useEffectEvent,
+	useState,
+	useRef,
+	type ChangeEvent,
+} from "react";
 import { useParams } from "react-router";
 
 import Text from "../components/text/Text";
@@ -65,6 +71,18 @@ export default function Profile() {
 		setEditMode((prev) => !prev);
 	}
 
+	function startEditing() {
+		if (!viewedProfile) return;
+
+		setFormData({
+			name: viewedProfile.name ?? "",
+			biography: viewedProfile.biography ?? "",
+			telephone: viewedProfile.telephone ?? "",
+			photo_url: viewedProfile.photo_url ?? "",
+		});
+		setEditMode(true);
+	}
+
 	const [formData, setFormData] = useState<UpdateProfileDTO>({
 		name: "",
 		biography: "",
@@ -73,13 +91,13 @@ export default function Profile() {
 	});
 
 	function resetForm() {
-		if (!myProfile) return;
+		if (!viewedProfile) return;
 
 		setFormData({
-			name: myProfile.name ?? "",
-			biography: myProfile.biography ?? "",
-			telephone: myProfile.telephone ?? "",
-			photo_url: myProfile.photo_url ?? "",
+			name: viewedProfile.name ?? "",
+			biography: viewedProfile.biography ?? "",
+			telephone: viewedProfile.telephone ?? "",
+			photo_url: viewedProfile.photo_url ?? "",
 		});
 	}
 
@@ -127,20 +145,7 @@ export default function Profile() {
 		onData: setAnnounces,
 	});
 
-	useEffect(() => {
-		if (!viewedProfile) return;
-
-		setFormData({
-			name: viewedProfile.name ?? "",
-			biography: viewedProfile.biography ?? "",
-			telephone: viewedProfile.telephone ?? "",
-			photo_url: viewedProfile.photo_url ?? "",
-		});
-	}, [viewedProfile]);
-
-	useEffect(() => {
-		if (!viewedProfileId) return;
-
+	const loadProfileResources = useEffectEvent(() => {
 		if (isOwner) {
 			myProfileResource.load();
 			myAnnouncesResource.load();
@@ -149,6 +154,12 @@ export default function Profile() {
 
 		publicProfileResource.load();
 		publicAnnouncesResource.load();
+	});
+
+	useEffect(() => {
+		if (!viewedProfileId) return;
+
+		loadProfileResources();
 	}, [viewedProfileId, isOwner]);
 
 	const loading =
@@ -199,6 +210,17 @@ export default function Profile() {
 				telephone: formData.telephone,
 				photo_url: formData.photo_url,
 			});
+			setViewedProfile((previous) =>
+				previous
+					? {
+							...previous,
+							name: formData.name ?? null,
+							biography: formData.biography ?? null,
+							telephone: formData.telephone ?? null,
+							photo_url: formData.photo_url ?? null,
+						}
+					: previous
+			);
 
 			await refreshProfile();
 
@@ -231,9 +253,9 @@ export default function Profile() {
 
 							<div className="w-full flex mt-4 md:mt-12 gap-4 sm:gap-8 md:gap-12">
 								<div id="profile-photo" className="my-auto shrink-0">
-									{formData.photo_url ? (
+									{viewedProfile?.photo_url ? (
 										<img
-											src={formData.photo_url}
+											src={viewedProfile.photo_url}
 											className="w-24 h-24 sm:w-32 sm:h-32 md:w-38 md:h-38 aspect-square rounded-full object-cover border border-(--shark)"
 										/>
 									) : (
@@ -242,11 +264,11 @@ export default function Profile() {
 								</div>
 
 								<div id="infos" className="flex flex-col gap-4">
-									<Text variant="title">{formData.name}</Text>
+									<Text variant="title">{viewedProfile?.name}</Text>
 
-									{formData.biography ? (
+									{viewedProfile?.biography ? (
 										<Text variant="muted" className="line-clamp-3">
-											{formData.biography}
+											{viewedProfile.biography}
 										</Text>
 									) : (
 										<Text variant="muted" className="text-(--secondary)">
@@ -254,32 +276,30 @@ export default function Profile() {
 										</Text>
 									)}
 
-									{formData.telephone ? (
+									{viewedProfile?.telephone && (
 										<div className="flex items-center gap-2">
 											{!isOwner && (
-												<button
-													id="whatsapp-button"
-													type="button"
-													onClick={() => {
-														if (!formData.telephone) return;
-														openWhatsapp(
-															formData.telephone,
-															`Olá, ${formData.name}! Vi um anúncio seu no CampusLoop e tenho interesse.`
-														);
-													}}
-													className="w-8 h-8 md:w-10 md:h-10 shrink-0 rounded-full bg-(--shark) flex justify-center items-center cursor-pointer"
-													aria-label="Abrir conversa no WhatsApp"
-												>
-													<TbBrandWhatsapp className="w-full h-full p-2" />
-												</button>
-											)}
+												<>
+													<button
+														id="whatsapp-button"
+														type="button"
+														onClick={() => {
+															if (!viewedProfile.telephone) return;
+															openWhatsapp(
+																viewedProfile.telephone,
+																`Olá, ${viewedProfile.name}! Vi um anúncio seu no CampusLoop e tenho interesse.`
+															);
+														}}
+														className="w-8 h-8 md:w-10 md:h-10 shrink-0 rounded-full bg-(--shark) flex justify-center items-center cursor-pointer"
+														aria-label="Abrir conversa no WhatsApp"
+													>
+														<TbBrandWhatsapp className="w-full h-full p-2" />
+													</button>
 
-											<Text variant="muted">{formData.telephone}</Text>
+													<Text variant="muted">Entre em contato comigo!</Text>
+												</>
+											)}
 										</div>
-									) : (
-										<Text variant="muted" className="text-(--secondary)">
-											(00) 9 9999-9999
-										</Text>
 									)}
 								</div>
 							</div>
@@ -290,7 +310,7 @@ export default function Profile() {
 									backgroundColor="var(--shark)"
 									color="white"
 									className="w-full mt-4 cursor-pointer"
-									onClick={() => toggleEditMode()}
+									onClick={startEditing}
 								>
 									Editar Perfil
 								</FormButton>

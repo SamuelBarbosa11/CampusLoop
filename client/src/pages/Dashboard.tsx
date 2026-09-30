@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useEffectEvent, useMemo, useState } from "react";
 import { useNavigate } from "react-router";
 
 import ButtonBackTo from "../components/navegation/ButtonBackTo";
@@ -19,7 +19,10 @@ import { useIsDesktop } from "../hooks/useIsDesktop";
 import { getMyAnnounces, getMyCategories } from "../services/announce.service";
 import { toast } from "../services/toast";
 
-import { getMyAnnouncesCacheKey, getMyCategoriesCacheKey } from "../utils/buildCacheKeys";
+import {
+	getMyAnnouncesCacheKey,
+	getMyCategoriesCacheKey,
+} from "../utils/buildCacheKeys";
 
 import type { Announce } from "../types/announce.types";
 
@@ -56,8 +59,12 @@ export default function Dashboard() {
 		onData: setCategories,
 	});
 
-	useEffect(() => {
+	const loadCategoriesOnce = useEffectEvent(() => {
 		loadCategories.load();
+	});
+
+	useEffect(() => {
+		loadCategoriesOnce();
 	}, []);
 
 	const orders = [

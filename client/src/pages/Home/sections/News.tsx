@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useEffectEvent, useMemo, useState } from "react";
 import clsx from "clsx";
 
 import Text from "../../../components/text/Text";
@@ -48,9 +48,13 @@ export default function News() {
 		onData: setCategories,
 	});
 
-	useEffect(() => {
-		loadCategories.load();
-	}, []);
+	const loadCategoriesOnce = useEffectEvent(() => {
+			loadCategories.load();
+		});
+	
+		useEffect(() => {
+			loadCategoriesOnce();
+		}, []);
 
 	const orders = [
 		{

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useEffectEvent, useMemo, useState } from "react";
 
 import Card from "../components/cards/Card";
 import Filters from "../components/search/Filters";
@@ -59,8 +59,12 @@ export default function Search() {
 		onData: setCategories,
 	});
 
-	useEffect(() => {
+	const loadCategoriesOnce = useEffectEvent(() => {
 		loadCategories.load();
+	});
+
+	useEffect(() => {
+		loadCategoriesOnce();
 	}, []);
 
 	const { load, isLoading } = useCachedResource({
